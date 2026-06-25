@@ -249,17 +249,30 @@ body {
   position: relative; overflow: hidden; border: 1px solid var(--mint-pale);
   display: flex; align-items: center; justify-content: center;
 }
-.about-logo-wrap {
+.about-logo-circle {
   width: 65%; aspect-ratio: 1;
   border-radius: 50%;
-  background: var(--mint-light);
+  background: rgba(142,205,168,0.2);
+  border: 1px solid rgba(142,205,168,0.25);
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden; opacity: 0.35;
+  flex-direction: column; gap: 4px;
 }
-.about-logo-img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
+.about-logo-leaf {
+  width: 40px; height: 40px; position: relative;
+}
+.about-logo-leaf::before, .about-logo-leaf::after {
+  content: ''; position: absolute;
+  width: 20px; height: 28px; border-radius: 0 50% 50% 50%;
+  border: 2px solid rgba(142,205,168,0.6);
+  background: rgba(142,205,168,0.15);
+}
+.about-logo-leaf::before { top: 0; left: 6px; transform: rotate(-15deg); }
+.about-logo-leaf::after { top: 2px; left: 16px; transform: rotate(20deg); }
+.about-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; color: rgba(142,205,168,0.45);
+  letter-spacing: -0.02em; font-weight: 400;
+  margin-top: 4px;
 }
 .about-badge {
   position: absolute; bottom: -16px; right: -16px;
@@ -644,8 +657,9 @@ body {
     <div class="about-layout">
       <div class="about-visual">
         <div class="about-frame">
-          <div class="about-logo-wrap">
-            <img class="about-logo-img" src="assets/logo.png" alt="DPylar Logo">
+          <div class="about-logo-circle">
+            <div class="about-logo-leaf"></div>
+            <span class="about-logo-text">D'pylar</span>
           </div>
         </div>
         <div class="about-badge">
