@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>D'Pylar | Depilação, Sobrancelha, Estética & Cílios — Campina Grande</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -51,17 +52,11 @@ body {
   height: 72px;
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.brand-mark {
-  width: 42px; height: 42px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--mint), var(--forest));
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
+.brand-logo {
+  width: 44px; height: 44px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  display: block;
 }
-.brand-mark::after {
-  content: ''; position: absolute; inset: -3px;
-  border-radius: 50%; border: 2px solid var(--rose); opacity: 0.6;
-}
-.brand-mark svg { width: 20px; height: 20px; fill: var(--white); }
 .brand-name {
   font-family: 'Playfair Display', serif;
   font-size: 1.45rem; font-weight: 700; color: var(--forest);
@@ -251,16 +246,14 @@ body {
 .about-frame {
   width: 100%; aspect-ratio: 4/5; border-radius: 32px;
   background: linear-gradient(160deg, var(--mint-pale) 0%, var(--mint-whisper) 100%);
-  position: relative; overflow: hidden; border: 1px solid var(--mint-pale); display:flex;align-items:center;justify-content:center;
+  position: relative; overflow: hidden; border: 1px solid var(--mint-pale);
+  display: flex; align-items: center; justify-content: center;
 }
-.about-frame-inner {
-  position: absolute; inset: 20px; border-radius: 24px;
-  border: 1.5px dashed var(--mint-light);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 24px;
+.about-logo-img {
+  width: 65%; height: auto;
+  object-fit: contain; opacity: 0.3;
+  display: block; margin: auto;
 }
-.about-frame-inner svg { width: 64px; height: 64px; stroke: var(--mint); fill: none; stroke-width: 1; opacity: 0.4; stroke-linecap: round; stroke-linejoin: round; }
-.about-frame-inner span { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--forest); opacity: 0.5; }
 .about-badge {
   position: absolute; bottom: -16px; right: -16px;
   background: var(--forest); color: var(--white);
@@ -366,14 +359,34 @@ body {
 
 /* ═══════════ HOURS & LOCATION ═══════════ */
 .location { background: var(--white); }
-.loc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.map-wrap {
+  border-radius: 24px; overflow: hidden;
+  border: 1px solid var(--mint-pale);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 32px; position: relative;
+}
+.map-wrap iframe, #dpylar-map {
+  display: block; width: 100%; height: 380px; border: none;
+}
+.map-overlay-btn {
+  position: absolute; bottom: 16px; right: 16px;
+  background: var(--forest); color: var(--white);
+  padding: 12px 22px; border-radius: 100px;
+  font-size: 0.82rem; font-weight: 600;
+  text-decoration: none; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 16px rgba(43,95,69,0.25);
+  transition: all 0.25s;
+}
+.map-overlay-btn:hover { background: var(--forest-deep); transform: translateY(-2px); }
+.map-overlay-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.loc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .loc-card {
   background: var(--cream); border-radius: var(--radius);
-  padding: 40px; border: 1px solid var(--mint-pale);
+  padding: 36px 32px; border: 1px solid var(--mint-pale);
 }
 .loc-card h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.3rem; color: var(--forest); margin-bottom: 24px;
+  font-size: 1.2rem; color: var(--forest); margin-bottom: 24px;
   display: flex; align-items: center; gap: 10px;
 }
 .loc-card h3 svg { width: 22px; height: 22px; stroke: var(--mint); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -473,6 +486,7 @@ body {
   .about-perks { grid-template-columns: 1fr; }
   .info-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
   .loc-grid { grid-template-columns: 1fr; }
+  .map-wrap iframe, #dpylar-map { height: 280px; }
   .footer-inner { grid-template-columns: 1fr 1fr; }
   .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
   .team-card { flex: 0 0 260px; }
@@ -773,6 +787,13 @@ body {
       <span class="section-tag">Visite-nos</span>
       <h2 class="section-title">Horários e localização</h2>
     </div>
+    <div class="map-wrap">
+      <div id="dpylar-map"></div>
+      <a href="https://www.google.com/maps/search/Avenida+Pl%C3%ADnio+Lemos,+195,+Malvinas,+Campina+Grande,+PB" target="_blank" class="map-overlay-btn">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Abrir no Google Maps
+      </a>
+    </div>
     <div class="loc-grid">
       <div class="loc-card">
         <h3>
@@ -951,6 +972,43 @@ track.addEventListener('touchend', e => {
   const diff = touchStartX - e.changedTouches[0].clientX;
   if (Math.abs(diff) > 50) slideTeam(diff > 0 ? 1 : -1);
 }, { passive: true });
+</script>
+
+<!-- Leaflet Map -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function() {
+  var lat = -7.23115, lng = -35.91782;
+  var map = L.map('dpylar-map', { scrollWheelZoom: false, zoomControl: true }).setView([lat, lng], 16);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(map);
+
+  var icon = L.divIcon({
+    className: '',
+    html: '<div style="background:#2B5F45;width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 4px 12px rgba(43,95,69,0.4);display:flex;align-items:center;justify-content:center;"><div style="transform:rotate(45deg);font-size:14px;">🌿</div></div>',
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -40]
+  });
+
+  L.marker([lat, lng], { icon: icon })
+    .addTo(map)
+    .bindPopup(
+      '<div style="font-family:Inter,sans-serif;text-align:center;padding:4px 8px;">' +
+      '<strong style="color:#2B5F45;font-size:0.95rem;">D\'Pylar</strong><br>' +
+      '<span style="font-size:0.8rem;color:#6B8576;">Av. Plínio Lemos, 195<br>Malvinas · Campina Grande, PB</span>' +
+      '</div>',
+      { maxWidth: 200 }
+    )
+    .openPopup();
+
+  // Enable scroll zoom on click
+  map.on('focus', function() { map.scrollWheelZoom.enable(); });
+  map.on('blur', function() { map.scrollWheelZoom.disable(); });
+})();
 </script>
 </body>
 </html>
