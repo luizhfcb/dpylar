@@ -249,10 +249,17 @@ body {
   position: relative; overflow: hidden; border: 1px solid var(--mint-pale);
   display: flex; align-items: center; justify-content: center;
 }
+.about-logo-wrap {
+  width: 65%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--mint-light);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; opacity: 0.35;
+}
 .about-logo-img {
-  width: 65%; height: auto;
-  object-fit: contain; opacity: 0.3;
-  display: block; margin: auto;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .about-badge {
   position: absolute; bottom: -16px; right: -16px;
@@ -637,7 +644,9 @@ body {
     <div class="about-layout">
       <div class="about-visual">
         <div class="about-frame">
-          <img src="assets/logo.png" alt="DPylar Logo" style="width:60%;opacity:0.35;border-radius:50%;">
+          <div class="about-logo-wrap">
+            <img class="about-logo-img" src="assets/logo.png" alt="DPylar Logo">
+          </div>
         </div>
         <div class="about-badge">
           <div class="about-badge-num">2016</div>
