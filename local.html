@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conheça o Nosso Local | D'Pylar — Campina Grande</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav class="nav" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <img class="brand-logo" src="assets/logo.png" alt="DPylar">
+      <span class="brand-name">D<span>'</span>Pylar</span>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="servicos.html">Serviços</a></li>
+      <li><a href="index.html#sobre">Sobre</a></li>
+      <li><a href="index.html#equipe">Equipe</a></li>
+      <li><a href="local.html" style="color:var(--forest);font-weight:700;">Nosso Local</a></li>
+      <li><a href="index.html#horarios">Horários</a></li>
+      <li><a href="index.html#contato" class="btn btn-nav">Agendar</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema">
+        <svg class="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+        </svg>
+      </button>
+      <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ MOBILE MENU ══ -->
+<div class="mobile-overlay" id="mobileMenu">
+  <button class="close-btn" onclick="document.getElementById('mobileMenu').classList.remove('open')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <a href="servicos.html" onclick="closeMobile()">Serviços</a>
+  <a href="index.html#sobre" onclick="closeMobile()">Sobre</a>
+  <a href="index.html#equipe" onclick="closeMobile()">Equipe</a>
+  <a href="local.html" onclick="closeMobile()">Nosso Local</a>
+  <a href="index.html#horarios" onclick="closeMobile()">Horários</a>
+  <a href="index.html#contato" class="btn btn-mint" onclick="closeMobile()">Agendar Horário</a>
+</div>
+
+<!-- ══ PAGE HERO ══ -->
+<section class="page-hero">
+  <span class="section-tag">Conheça a D'Pylar</span>
+  <h1>Nosso <em style="font-style:italic;color:var(--mint)">Local</em></h1>
+  <p>Um espaço pensado para o seu conforto e bem-estar, com ambiente acolhedor, limpo e preparado para cuidar de você do início ao fim do atendimento.</p>
+</section>
+
+<!-- ══ CARROSSEL DO AMBIENTE ══ -->
+<section class="local-carousel-section">
+  <div class="local-carousel-bg" style="background-image:url('assets/ambiente-sala-multiuso.jpg');"></div>
+  <div class="local-carousel-overlay"></div>
+  <div class="local-carousel-wrap">
+    <div class="local-carousel-track" id="localTrack">
+      <div class="local-slide"><img src="assets/ambiente-recepcao.jpg" alt="Recepção D'Pylar"></div>
+      <div class="local-slide"><img src="assets/ambiente-sala-cera.jpg" alt="Sala de Depilação a Cera"></div>
+      <div class="local-slide"><img src="assets/ambiente-sala-multiuso.jpg" alt="Sala de Fotodepilação e Estética"></div>
+      <div class="local-slide"><img src="assets/ambiente-sobrancelha.png" alt="Sala de Sobrancelhas"></div>
+      <div class="local-slide"><img src="assets/ambiente-cilios.jpg" alt="Sala de Cílios"></div>
+      <div class="local-slide"><img src="assets/ambiente-copa.jpg" alt="Copa e Área de Espera"></div>
+      <div class="local-slide"><img src="assets/ambiente-banheiro.jpg" alt="Banheiro D'Pylar"></div>
+      <!-- duplicado para o loop ficar contínuo -->
+      <div class="local-slide"><img src="assets/ambiente-recepcao.jpg" alt="Recepção D'Pylar"></div>
+      <div class="local-slide"><img src="assets/ambiente-sala-cera.jpg" alt="Sala de Depilação a Cera"></div>
+      <div class="local-slide"><img src="assets/ambiente-sala-multiuso.jpg" alt="Sala de Fotodepilação e Estética"></div>
+      <div class="local-slide"><img src="assets/ambiente-sobrancelha.png" alt="Sala de Sobrancelhas"></div>
+      <div class="local-slide"><img src="assets/ambiente-cilios.jpg" alt="Sala de Cílios"></div>
+      <div class="local-slide"><img src="assets/ambiente-copa.jpg" alt="Copa e Área de Espera"></div>
+      <div class="local-slide"><img src="assets/ambiente-banheiro.jpg" alt="Banheiro D'Pylar"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ SOBRE O ESTÚDIO ══ -->
+<section class="section" style="padding-top:70px;padding-bottom:70px;">
+  <div class="section-inner" style="max-width:760px;margin:0 auto;text-align:center;">
+    <span class="section-tag" style="display:flex;justify-content:center;">Estúdio de Depilação</span>
+    <h2 class="section-title">Um espaço pensado pra você se sentir em casa</h2>
+    <p class="section-sub" style="margin:0 auto;">
+      O estúdio D'Pylar foi projetado como um refúgio de calma dentro da correria do dia a dia. Ambientes clarinhos, decoração leve em tons de verde e madeira, e cada canto pensado pra transmitir conforto — da recepção até a sala de atendimento. Aqui você é recebida com atenção individual, higiene rigorosa e todo o cuidado de uma equipe que trata cada detalhe como prioridade, para que sua experiência vá muito além do procedimento: seja um momento só seu.
+    </p>
+  </div>
+</section>
+
+<!-- ══ NOSSOS AMBIENTES ══ -->
+<section class="section" id="ambientes" style="background:var(--cream);">
+  <div class="section-inner">
+    <div class="section-header center">
+      <span class="section-tag">Espaço por Espaço</span>
+      <h2 class="section-title">Conheça cada ambiente da D'Pylar</h2>
+      <p class="section-sub" style="margin:0 auto;">Clique em qualquer ambiente abaixo para conhecer os detalhes daquele espaço do nosso estúdio.</p>
+    </div>
+
+    <div class="env-list">
+
+      <!-- 01 · Recepção -->
+      <div class="env-row reverse">
+        <div class="env-photo">
+          <a href="ambiente.html?id=recepcao" aria-label="Conhecer a Recepção">
+            <div class="env-frame"><img src="assets/ambiente-recepcao.jpg" alt="Recepção D'Pylar"></div>
+            <span class="env-index">01</span>
+          </a>
+        </div>
+        <div class="env-text">
+          <span class="section-tag">Ambiente 01</span>
+          <h3>Recepção</h3>
+          <p>O primeiro contato com a D'Pylar já é pensado para acolher: espaço clarinho, confortável e com aquele cheirinho gostoso que já deixa você à vontade antes mesmo do atendimento começar.</p>
+          <a href="ambiente.html?id=recepcao" class="btn-outline">Saiba mais</a>
+        </div>
+      </div>
+
+      <!-- 02 · Sala de Depilação a Cera -->
+      <div class="env-row">
+        <div class="env-photo">
+          <a href="ambiente.html?id=sala-cera" aria-label="Conhecer a Sala de Depilação a Cera">
+            <div class="env-frame"><img src="assets/ambiente-sala-cera.jpg" alt="Sala de Depilação a Cera"></div>
+            <span class="env-index">02</span>
+          </a>
+        </div>
+        <div class="env-text">
+          <span class="section-tag">Ambiente 02</span>
+          <h3>Sala de Depilação a Cera</h3>
+          <p>Ambiente reservado e climatizado, com maca confortável e todo o material esterilizado, pensado para que a depilação a cera seja tranquila do início ao fim.</p>
+          <a href="ambiente.html?id=sala-cera" class="btn-outline">Saiba mais</a>
+        </div>
+      </div>
+
+      <!-- 03 · Sala de Fotodepilação & Estética (ambiente multiuso) -->
+      <div class="env-row reverse">
+        <div class="env-photo">
+          <a href="ambiente.html?id=sala-multiuso" aria-label="Conhecer a Sala de Fotodepilação e Estética">
+            <div class="env-frame"><img src="assets/ambiente-sala-multiuso.jpg" alt="Sala de Fotodepilação e Estética"></div>
+            <span class="env-index">03</span>
+          </a>
+        </div>
+        <div class="env-text">
+          <span class="section-tag">Ambiente 03</span>
+          <h3>Sala de Fotodepilação &amp; Estética</h3>
+          <p>Nosso espaço multiuso reúne, no mesmo ambiente climatizado e privativo, a tecnologia de luz pulsada da fotodepilação e a maca dos tratamentos faciais e corporais — tudo com o mesmo padrão de conforto e higiene.</p>
+          <a href="ambiente.html?id=sala-multiuso" class="btn-outline">Saiba mais</a>
+        </div>
+      </div>
+
+      <!-- 04 · Sala de Sobrancelhas -->
+      <div class="env-row">
+        <div class="env-photo">
+          <a href="ambiente.html?id=sala-sobrancelhas" aria-label="Conhecer a Sala de Sobrancelhas">
+            <div class="env-frame"><img src="assets/ambiente-sobrancelha.png" alt="Sala de Sobrancelhas"></div>
+            <span class="env-index">04</span>
+          </a>
+        </div>
+        <div class="env-text">
+          <span class="section-tag">Ambiente 04</span>
+          <h3>Sala de Sobrancelhas</h3>
+          <p>Ambiente reservado, com iluminação de precisão e cadeira reclinável, pensado especialmente para o design perfeito das suas sobrancelhas.</p>
+          <a href="ambiente.html?id=sala-sobrancelhas" class="btn-outline">Saiba mais</a>
+        </div>
+      </div>
+
+      <!-- 05 · Sala de Cílios -->
+      <div class="env-row reverse">
+        <div class="env-photo">
+          <a href="ambiente.html?id=sala-cilios" aria-label="Conhecer a Sala de Cílios">
+            <div class="env-frame"><img src="assets/ambiente-cilios.jpg" alt="Sala de Cílios"></div>
+            <span class="env-index">05</span>
+          </a>
+        </div>
+        <div class="env-text">
+          <span class="section-tag">Ambiente 05</span>
+          <h3>Sala de Cílios</h3>
+          <p>Um espaço tranquilo e reservado, preparado para a extensão e o design de cílios com todo o cuidado no detalhe.</p>
+          <a href="ambiente.html?id=sala-cilios" class="btn-outline">Saiba mais</a>
+        </div>
+      </div>
+
+      <!-- 06 · Copa & Área de Espera -->
+      <div class="env-row">
+        <div class="env-photo">
+          <a href="ambiente.html?id=copa" aria-label="Conhecer a Copa e Área de Espera">
+            <div class="env-frame"><img src="assets/ambiente-copa.jpg" alt="Copa e Área de Espera"></div>
+            <span class="env-index">06</span>
+          </a>
+        </div>
+        <div class="env-text">
+          <span class="section-tag">Ambiente 06</span>
+          <h3>Copa &amp; Área de Espera</h3>
+          <p>Um cantinho pra relaxar antes ou depois do atendimento, com água, café e Wi-Fi grátis — porque o cuidado com você começa antes mesmo da sala de atendimento.</p>
+          <a href="ambiente.html?id=copa" class="btn-outline">Saiba mais</a>
+        </div>
+      </div>
+
+      <!-- 07 · Banheiro -->
+      <div class="env-row reverse">
+        <div class="env-photo">
+          <a href="ambiente.html?id=banheiro" aria-label="Conhecer o Banheiro">
+            <div class="env-frame"><img src="assets/ambiente-banheiro.jpg" alt="Banheiro D'Pylar"></div>
+            <span class="env-index">07</span>
+          </a>
+        </div>
+        <div class="env-text">
+          <span class="section-tag">Ambiente 07</span>
+          <h3>Banheiro</h3>
+          <p>Ambiente limpo, com acessibilidade para deficientes e toda a estrutura necessária para o seu conforto durante a visita.</p>
+          <a href="ambiente.html?id=banheiro" class="btn-outline">Saiba mais</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta" id="contato">
+  <div class="cta-inner">
+    <span class="section-tag">Venha nos visitar</span>
+    <h2>Está pertinho de você, em <em style="font-style:italic;color:var(--mint)">Campina Grande</em></h2>
+    <p>Avenida Plínio Lemos, 195 — Malvinas. Agende seu horário e venha conhecer nosso espaço de perto.</p>
+    <div class="cta-buttons">
+      <a href="https://wa.me/5583986697088" class="btn btn-whatsapp" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Agendar por WhatsApp
+      </a>
+      <a href="index.html#horarios" class="btn btn-ghost">Ver localização e horários</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="assets/logo.png" alt="DPylar" style="width:36px;height:36px;border-radius:50%;">
+        <span class="brand-name" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;">D<span>'</span>Pylar</span>
+      </div>
+      <p class="footer-about">Realçando sua beleza desde 2016. Depilação, sobrancelhas, cílios e estética em Campina Grande.</p>
+    </div>
+    <div>
+      <h5>Serviços</h5>
+      <ul>
+        <li><a href="servicos.html#cera">Depilação a Cera</a></li>
+        <li><a href="servicos.html#fotodepilacao">Fotodepilação</a></li>
+        <li><a href="servicos.html#sobrancelhas">Sobrancelhas</a></li>
+        <li><a href="servicos.html#cilios">Cílios</a></li>
+        <li><a href="servicos.html#facial">Estética</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Contato</h5>
+      <ul>
+        <li><a href="tel:+5583986697088">(83) 98669-7088</a></li>
+        <li><a href="tel:+558333392433">(83) 3339-2433</a></li>
+        <li><a href="https://www.instagram.com/dpylarcg" target="_blank">@dpylarcg</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Endereço</h5>
+      <ul>
+        <li><a href="https://maps.app.goo.gl/AVbUxdaRb7txiyN36" target="_blank">Av. Plínio Lemos, 195<br>Malvinas, Campina Grande — PB</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 D'Pylar. Todos os direitos reservados.</span>
+    <div class="socials">
+      <a href="https://www.instagram.com/dpylarcg" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/Dpylar" target="_blank" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ LIGHTBOX ══ -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Próximo">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+  </button>
+</div>
+
+<script src="script.js"></script>
+<script>
+  // Lightbox para as fotos do carrossel do local
+  (function () {
+    // pega só os 8 originais (ignora a duplicata usada pro loop do carrossel)
+    const items = Array.from(document.querySelectorAll('#localTrack .local-slide img')).slice(0, 8);
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    let current = 0;
+
+    function open(i) {
+      current = i;
+      lightboxImg.src = items[current].src;
+      lightboxImg.alt = items[current].alt;
+      lightbox.classList.add('open');
+    }
+    function close() { lightbox.classList.remove('open'); }
+    function next(dir) {
+      current = (current + dir + items.length) % items.length;
+      lightboxImg.src = items[current].src;
+      lightboxImg.alt = items[current].alt;
+    }
+
+    document.querySelectorAll('#localTrack .local-slide img').forEach((img) => {
+      img.addEventListener('click', () => {
+        const idx = items.indexOf(img) !== -1 ? items.indexOf(img) : items.findIndex(i => i.src === img.src);
+        open(idx);
+      });
+    });
+    document.getElementById('lightboxClose').addEventListener('click', close);
+    document.getElementById('lightboxPrev').addEventListener('click', () => next(-1));
+    document.getElementById('lightboxNext').addEventListener('click', () => next(1));
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowRight') next(1);
+      if (e.key === 'ArrowLeft') next(-1);
+    });
+  })();
+</script>
+</body>
+</html>

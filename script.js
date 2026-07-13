@@ -47,52 +47,86 @@ document.querySelectorAll('.srv-card,.perk,.loc-card,.info-item,.team-card').for
   obs.observe(el);
 });
 
-// Team Carousel
-let teamPos = 0;
+// Team Carousel (só roda se a página tiver o carrossel de equipe)
 const track = document.getElementById('teamTrack');
-const cards = track.querySelectorAll('.team-card');
-const dotsContainer = document.getElementById('teamDots');
+if (track) {
+  let teamPos = 0;
+  const cards = track.querySelectorAll('.team-card');
+  const dotsContainer = document.getElementById('teamDots');
 
-function getCardWidth() {
-  const card = cards[0];
-  const style = getComputedStyle(track);
-  const gap = parseInt(style.gap) || 24;
-  return card.offsetWidth + gap;
-}
-function getVisibleCount() {
-  const container = track.parentElement;
-  return Math.floor(container.offsetWidth / getCardWidth()) || 1;
-}
-function getMaxPos() {
-  return Math.max(0, cards.length - getVisibleCount());
-}
-function buildDots() {
-  const max = getMaxPos();
-  dotsContainer.innerHTML = '';
-  for (let i = 0; i <= max; i++) {
-    const dot = document.createElement('button');
-    dot.className = 'team-dot' + (i === teamPos ? ' active' : '');
-    dot.onclick = () => { teamPos = i; updateCarousel(); };
-    dotsContainer.appendChild(dot);
-  }
-}
-function updateCarousel() {
-  const max = getMaxPos();
-  if (teamPos < 0) teamPos = max;
-  if (teamPos > max) teamPos = 0;
-  track.style.transform = `translateX(-${teamPos * getCardWidth()}px)`;
+  const getCardWidth = () => {
+    const card = cards[0];
+    const style = getComputedStyle(track);
+    const gap = parseInt(style.gap) || 24;
+    return card.offsetWidth + gap;
+  };
+  const getVisibleCount = () => {
+    const container = track.parentElement;
+    return Math.floor(container.offsetWidth / getCardWidth()) || 1;
+  };
+  const getMaxPos = () => Math.max(0, cards.length - getVisibleCount());
+  const buildDots = () => {
+    const max = getMaxPos();
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i <= max; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'team-dot' + (i === teamPos ? ' active' : '');
+      dot.onclick = () => { teamPos = i; updateCarousel(); };
+      dotsContainer.appendChild(dot);
+    }
+  };
+  const updateCarousel = () => {
+    const max = getMaxPos();
+    if (teamPos < 0) teamPos = max;
+    if (teamPos > max) teamPos = 0;
+    track.style.transform = `translateX(-${teamPos * getCardWidth()}px)`;
+    buildDots();
+  };
+  window.slideTeam = (dir) => { teamPos += dir; updateCarousel(); };
+
   buildDots();
+  updateCarousel();
+  window.addEventListener('resize', () => { teamPos = Math.min(teamPos, getMaxPos()); updateCarousel(); });
+
+  // Touch swipe for carousel
+  let touchStartX = 0;
+  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) window.slideTeam(diff > 0 ? 1 : -1);
+  }, { passive: true });
 }
-function slideTeam(dir) { teamPos += dir; updateCarousel(); }
+// Lightbox para as fotos da equipe
+(function () {
+  const imgs = Array.from(document.querySelectorAll('.team-card-img'));
+  if (!imgs.length) return;
 
-buildDots();
-updateCarousel();
-window.addEventListener('resize', () => { teamPos = Math.min(teamPos, getMaxPos()); updateCarousel(); });
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  let current = 0;
 
-// Touch swipe for carousel
-let touchStartX = 0;
-track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-track.addEventListener('touchend', e => {
-  const diff = touchStartX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 50) slideTeam(diff > 0 ? 1 : -1);
-}, { passive: true });
+  function openLightbox(i) {
+    current = i;
+    lightboxImg.src = imgs[current].src;
+    lightboxImg.alt = imgs[current].alt;
+    lightbox.classList.add('open');
+  }
+  function closeLightbox() { lightbox.classList.remove('open'); }
+  function nextLightbox(dir) {
+    current = (current + dir + imgs.length) % imgs.length;
+    lightboxImg.src = imgs[current].src;
+    lightboxImg.alt = imgs[current].alt;
+  }
+
+  imgs.forEach((img, i) => img.addEventListener('click', () => openLightbox(i)));
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightboxPrev').addEventListener('click', () => nextLightbox(-1));
+  document.getElementById('lightboxNext').addEventListener('click', () => nextLightbox(1));
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') nextLightbox(1);
+    if (e.key === 'ArrowLeft') nextLightbox(-1);
+  });
+})();

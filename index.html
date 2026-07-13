@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<!-- ══ NAV ══ -->
+<!-- ══ CABEÇALHO ══ -->
 <nav class="nav" id="navbar">
   <div class="nav-inner">
     <a href="#" class="brand">
@@ -19,15 +19,15 @@
       <span class="brand-name">D<span>'</span>Pylar</span>
     </a>
     <ul class="nav-menu">
-      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="servicos.html">Serviços</a></li>
       <li><a href="#sobre">Sobre</a></li>
       <li><a href="#equipe">Equipe</a></li>
+      <li><a href="local.html">Nosso Local</a></li>
       <li><a href="#horarios">Horários</a></li>
       <li><a href="#contato" class="btn btn-nav">Agendar</a></li>
     </ul>
     <div class="nav-controls">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema">
-        <!-- Sol (tema escuro ativo) -->
         <svg class="icon-sun" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5"/>
           <line x1="12" y1="1" x2="12" y2="3"/>
@@ -56,14 +56,15 @@
   <button class="close-btn" onclick="document.getElementById('mobileMenu').classList.remove('open')">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <a href="#servicos" onclick="closeMobile()">Serviços</a>
+  <a href="servicos.html" onclick="closeMobile()">Serviços</a>
   <a href="#sobre" onclick="closeMobile()">Sobre</a>
   <a href="#equipe" onclick="closeMobile()">Equipe</a>
+  <a href="local.html" onclick="closeMobile()">Nosso Local</a>
   <a href="#horarios" onclick="closeMobile()">Horários</a>
   <a href="#contato" class="btn btn-mint" onclick="closeMobile()">Agendar Horário</a>
 </div>
 
-<!-- ══ HERO ══ -->
+<!-- ══ TRABALHOS ══ -->
 <section class="hero">
   <div class="hero-bg">
     <div class="hero-circle hero-circle-1"></div>
@@ -80,7 +81,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Agendar por WhatsApp
         </a>
-        <a href="#servicos" class="btn btn-ghost">Ver Serviços</a>
+        <a href="servicos.html" class="btn btn-ghost">Ver Serviços</a>
       </div>
       <div class="hero-proof">
         <div class="hero-proof-avatars">
@@ -116,7 +117,7 @@
   </div>
 </section>
 
-<!-- ══ SERVICES ══ -->
+<!-- ══ SERVIÇOS ══ -->
 <section class="section services" id="servicos">
   <div class="section-inner">
     <div class="section-header center">
@@ -126,49 +127,61 @@
     </div>
     <div class="srv-grid">
       <div class="srv-card">
-        <div class="srv-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <div class="srv-photo"><img src="assets/servico-cera.jpg" alt="Depilação a Cera"></div>
         <h3>Depilação a Cera</h3>
         <p>Cera especializada com técnica que proporciona conforto e resultados duradouros, para todas as áreas do corpo.</p>
+        <a href="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20Depila%C3%A7%C3%A3o%20a%20Cera" class="btn-outline" target="_blank">Saiba mais</a>
       </div>
       <div class="srv-card">
-        <div class="srv-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
+        <div class="srv-photo"><img src="assets/servico-fotodepilacao.jpg" alt="Fotodepilação"></div>
         <h3>Fotodepilação</h3>
         <p>Tecnologia de luz pulsada para redução progressiva dos pelos com conforto e segurança em todas as áreas.</p>
+        <a href="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20Fotodepila%C3%A7%C3%A3o" class="btn-outline" target="_blank">Saiba mais</a>
       </div>
       <div class="srv-card">
-        <div class="srv-icon"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="srv-photo"><img src="assets/servico-sobrancelhas.jpg" alt="Design de Sobrancelhas"></div>
         <h3>Design de Sobrancelhas</h3>
         <p>Valorize seu olhar com técnicas de design que realçam a harmonia e a expressão do seu rosto.</p>
+        <a href="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20Design%20de%20Sobrancelhas" class="btn-outline" target="_blank">Saiba mais</a>
       </div>
       <div class="srv-card">
-        <div class="srv-icon"><svg viewBox="0 0 24 24"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg></div>
+        <div class="srv-photo"><img src="assets/servico-cilios.jpg" alt="Cílios"></div>
         <h3>Cílios</h3>
         <p>Extensão e tratamento de cílios para um olhar mais expressivo e marcante, com técnicas profissionais.</p>
+        <a href="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20C%C3%ADlios" class="btn-outline" target="_blank">Saiba mais</a>
       </div>
       <div class="srv-card">
-        <div class="srv-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="srv-photo"><img src="assets/servico-estetica-facial.jpg" alt="Estética Facial"></div>
         <h3>Estética Facial</h3>
         <p>Tratamentos faciais personalizados para revitalizar, hidratar e cuidar da saúde da sua pele.</p>
+        <a href="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20Est%C3%A9tica%20Facial" class="btn-outline" target="_blank">Saiba mais</a>
       </div>
       <div class="srv-card">
-        <div class="srv-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+        <div class="srv-photo"><img src="assets/servico-estetica-corporal.jpg" alt="Estética Corporal"></div>
         <h3>Estética Corporal</h3>
         <p>Procedimentos corporais com foco no bem-estar, autoestima e no cuidado integral do seu corpo.</p>
+        <a href="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20Est%C3%A9tica%20Corporal" class="btn-outline" target="_blank">Saiba mais</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ ABOUT ══ -->
+<!-- ══ SOBRE ══ -->
+ <style>
+  .about-imagem {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem preencha a div sem achatar */
+    border-radius: 8px; /* Opcional: arredonda as bordas */
+    display: block;
+  }
+</style>
 <section class="section about" id="sobre">
   <div class="section-inner">
     <div class="about-layout">
       <div class="about-visual">
         <div class="about-frame">
-          <div class="about-logo-circle">
-            <div class="about-logo-leaf"></div>
-            <span class="about-logo-text">D'pylar</span>
-          </div>
+          <img src="assets/logo.png" alt="Sobre a D'Pylar" class="about-imagem">
         </div>
         <div class="about-badge">
           <div class="about-badge-num">2016</div>
@@ -207,7 +220,7 @@
   </div>
 </section>
 
-<!-- ══ TEAM CAROUSEL ══ -->
+<!-- ══ CARROSEL (TIME) ══ -->
 <section class="section team" id="equipe">
   <div class="section-inner">
     <div class="section-header center">
@@ -219,7 +232,7 @@
       <div class="team-track-container">
         <div class="team-track" id="teamTrack">
           <div class="team-card">
-            <img class="team-card-img" src="assets/img1.jpg" alt="Rosina Helena">
+            <img class="team-card-img" src="assets/img2.jpg" alt="Rosina Helena">
             <div class="team-card-body">
               <h4>Rosina Helena</h4>
               <div class="team-role">Proprietária · Depilação & Design</div>
@@ -227,7 +240,7 @@
             </div>
           </div>
           <div class="team-card">
-            <img class="team-card-img" src="assets/img6.jpg" alt="Luana Silva">
+            <img class="team-card-img" src="assets/img3.jpg" alt="Luana Silva">
             <div class="team-card-body">
               <h4>Luana Silva</h4>
               <div class="team-role">Depilação & Design de Sobrancelhas</div>
@@ -235,7 +248,7 @@
             </div>
           </div>
           <div class="team-card">
-            <img class="team-card-img" src="assets/img4.jpg" alt="Ednalva Santos">
+            <img class="team-card-img" src="assets/img1.jpg" alt="Ednalva Santos">
             <div class="team-card-body">
               <h4>Ednalva Santos</h4>
               <div class="team-role">Esteticista</div>
@@ -243,7 +256,7 @@
             </div>
           </div>
           <div class="team-card">
-            <img class="team-card-img" src="assets/img7.jpg" alt="Jheniffer Silva">
+            <img class="team-card-img" src="assets/img9.jpg" alt="Jheniffer Silva">
             <div class="team-card-body">
               <h4>Jheniffer Silva</h4>
               <div class="team-role">Sobrancelhas & Brow Lamination</div>
@@ -251,7 +264,7 @@
             </div>
           </div>
           <div class="team-card">
-            <img class="team-card-img" src="assets/img8.jpg" alt="Bruna Célia">
+            <img class="team-card-img" src="assets/img6.jpg" alt="Bruna Célia">
             <div class="team-card-body">
               <h4>Bruna Célia</h4>
               <div class="team-role">Depilação</div>
@@ -259,7 +272,7 @@
             </div>
           </div>
           <div class="team-card">
-            <img class="team-card-img" src="assets/img9.jpg" alt="Rayssa dos Santos">
+            <img class="team-card-img" src="assets/img7.jpg" alt="Rayssa dos Santos">
             <div class="team-card-body">
               <h4>Rayssa dos Santos</h4>
               <div class="team-role">Cílios & Sobrancelhas</div>
@@ -267,13 +280,21 @@
             </div>
           </div>
           <div class="team-card">
-            <img class="team-card-img" src="assets/img5.jpg" alt="Renata">
+            <img class="team-card-img" src="assets/img8.jpg" alt="Renata">
             <div class="team-card-body">
               <h4>Renata</h4>
               <div class="team-role">Recepcionista</div>
               <p>Acolhimento e atendimento com simpatia, organização e profissionalismo. Experiência positiva desde o primeiro contato.</p>
             </div>
           </div>
+          <div class="team-card">
+            <img class="team-card-img" src="assets/img10.jpg" alt="Jaciana">
+            <div class="team-card-body">
+              <h4>Jaciana</h4>
+              <div class="team-role">Recepcionista</div>
+              <p>Descrição curta sobre a profissional, no mesmo estilo dos outros cards.</p>
+          </div>
+        </div>
         </div>
       </div>
       <div class="team-nav">
@@ -289,7 +310,7 @@
   </div>
 </section>
 
-<!-- ══ INFO BAR ══ -->
+<!-- ══ INFORMAÇÕES ══ -->
 <div class="info-bar">
   <div class="info-grid">
     <div class="info-item">
@@ -318,13 +339,14 @@
       <span class="section-tag">Visite-nos</span>
       <h2 class="section-title">Horários e localização</h2>
     </div>
-    <div class="map-wrap">
-      <div id="dpylar-map"></div>
-      <a href="https://www.google.com/maps/search/Avenida+Pl%C3%ADnio+Lemos,+195,+Malvinas,+Campina+Grande,+PB" target="_blank" class="map-overlay-btn">
-        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Abrir no Google Maps
-      </a>
-    </div>
+<div class="map-wrap">
+  <div id="dpylar-map" style="height: 450px; width: 100%; z-index: 1;"></div>
+  
+  <a href="https://maps.google.com/maps?q=-7.2382758,-35.9235227" target="_blank" class="map-overlay-btn">
+    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Abrir no Google Maps
+  </a>
+</div>
     <div class="loc-grid">
       <div class="loc-card">
         <h3>
@@ -337,7 +359,7 @@
           <li><span class="hours-day">Quarta-feira</span><span class="hours-time">09:00 — 19:00</span></li>
           <li><span class="hours-day">Quinta-feira</span><span class="hours-time">09:00 — 19:00</span></li>
           <li><span class="hours-day">Sexta-feira</span><span class="hours-time">09:00 — 19:00</span></li>
-          <li><span class="hours-day">Sábado</span><span class="hours-time">08:00 — 18:00</span></li>
+          <li><span class="hours-day">Sábado</span><span class="hours-time">09:00 — 18:00</span></li>
           <li><span class="hours-day">Domingo</span><span class="hours-closed">Fechado</span></li>
         </ul>
       </div>
@@ -403,11 +425,11 @@
     <div>
       <h5>Serviços</h5>
       <ul>
-        <li><a href="#servicos">Depilação a Cera</a></li>
-        <li><a href="#servicos">Fotodepilação</a></li>
-        <li><a href="#servicos">Sobrancelhas</a></li>
-        <li><a href="#servicos">Cílios</a></li>
-        <li><a href="#servicos">Estética</a></li>
+        <li><a href="servicos.html#cera">Depilação a Cera</a></li>
+        <li><a href="servicos.html#fotodepilacao">Fotodepilação</a></li>
+        <li><a href="servicos.html#sobrancelhas">Sobrancelhas</a></li>
+        <li><a href="servicos.html#cilios">Cílios</a></li>
+        <li><a href="servicos.html#facial">Estética</a></li>
       </ul>
     </div>
     <div>
@@ -421,7 +443,7 @@
     <div>
       <h5>Endereço</h5>
       <ul>
-        <li><a href="https://maps.google.com/maps?daddr=Avenida+Pl%C3%ADnio+Lemos,+195,+Malvinas,+Campina+Grande,+PB" target="_blank">Av. Plínio Lemos, 195<br>Malvinas, Campina Grande — PB</a></li>
+        <li><a href="https://maps.app.goo.gl/AVbUxdaRb7txiyN36" target="_blank">Av. Plínio Lemos, 195<br>Malvinas, Campina Grande — PB</a></li>
       </ul>
     </div>
   </div>
@@ -437,43 +459,49 @@
     </div>
   </div>
 </footer>
-
+<!-- ══ LIGHTBOX ══ -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Próximo">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+  </button>
+</div>
 <script src="script.js"></script>
-
-<!-- Leaflet Map -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (function() {
-  var lat = -7.23115, lng = -35.91782;
-  var map = L.map('dpylar-map', { scrollWheelZoom: false, zoomControl: true }).setView([lat, lng], 16);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+  var lat = -7.2382758, lng = -35.9235227;
+    var map = L.map('dpylar-map', { 
+    scrollWheelZoom: false, 
+    zoomControl: true,
+    attributionControl: false 
+  }).setView([lat, lng], 16);
+  L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
     maxZoom: 19
   }).addTo(map);
-
-  var icon = L.divIcon({
-    className: '',
-    html: '<div style="background:#2B5F45;width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 4px 12px rgba(43,95,69,0.4);display:flex;align-items:center;justify-content:center;"><div style="transform:rotate(45deg);font-size:14px;">🌿</div></div>',
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    popupAnchor: [0, -40]
+  var icon = L.icon({
+    iconUrl: 'assets/icon-loc.png',
+    iconSize: [50, 46],
+    iconAnchor: [30, 36],
+    className: 'icone-mapa-limpo'
   });
-
-  L.marker([lat, lng], { icon: icon })
-    .addTo(map)
-    .bindPopup(
-      '<div style="font-family:Inter,sans-serif;text-align:center;padding:4px 8px;">' +
-      '<strong style="color:#2B5F45;font-size:0.95rem;">D\'Pylar</strong><br>' +
-      '<span style="font-size:0.8rem;color:#6B8576;">Av. Plínio Lemos, 195<br>Malvinas · Campina Grande, PB</span>' +
-      '</div>',
-      { maxWidth: 200 }
-    )
-    .openPopup();
-
+  var marcador = L.marker([lat, lng], { icon: icon }).addTo(map);
+  marcador.on('click', function() {
+    var endereco = "D'Pylar, Av. Plínio Lemos, 195 - Malvinas, Campina Grande - PB";
+    var urlGoogleMaps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(endereco);
+    window.open(urlGoogleMaps, '_blank');
+    
+  });
   map.on('focus', function() { map.scrollWheelZoom.enable(); });
   map.on('blur', function() { map.scrollWheelZoom.disable(); });
 })();
+
 </script>
 </body>
 </html>
