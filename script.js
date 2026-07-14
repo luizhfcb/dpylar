@@ -1,132 +1,358 @@
+// Mark JS available for progressive enhancement
+document.documentElement.classList.add('js-ready');
+
 // Mobile menu
-function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+function setHamburgerExpanded(open) {
+  const burger = document.querySelector('.hamburger');
+  if (burger) burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+function openMobile() {
+  const menu = document.getElementById('mobileMenu');
+  if (!menu) return;
+  menu.classList.add('open');
+  menu.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  setHamburgerExpanded(true);
+  const closeBtn = menu.querySelector('.close-btn');
+  if (closeBtn) closeBtn.focus();
+}
+
+// Fecha ao clicar no fundo (fora do sheet)
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('mobileMenu');
+  if (!menu || !menu.classList.contains('open')) return;
+  if (e.target === menu) closeMobile();
+}, true);
+
+function closeMobile() {
+  const menu = document.getElementById('mobileMenu');
+  if (!menu) return;
+  const wasOpen = menu.classList.contains('open');
+  menu.classList.remove('open');
+  menu.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  setHamburgerExpanded(false);
+  const burger = document.querySelector('.hamburger[aria-controls=mobileMenu]');
+  if (wasOpen && burger) burger.focus();
+}
+
+function handleMobileMenuKeydown(event) {
+  if (event.key === 'Escape') {
+    closeMobile();
+    return;
+  }
+  if (event.key !== 'Tab') return;
+
+  const menu = document.getElementById('mobileMenu');
+  if (!menu || !menu.classList.contains('open')) return;
+
+  const focusables = Array.from(menu.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), '
+    + 'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )).filter((element) => {
+    if (element.hidden || element.getAttribute?.('aria-hidden') === 'true') return false;
+    return typeof element.getClientRects !== 'function' || element.getClientRects().length > 0;
+  });
+  if (!focusables.length) return;
+
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  } else if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  }
+}
 
 // Navbar scroll
-window.addEventListener('scroll', () => {
-  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
-});
+const navbar = document.getElementById('navbar');
+if (navbar) {
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+}
 
-// Theme toggle
+// Theme: default light always. Dark only if user explicitly chose it.
 const THEME_KEY = 'dpylar-theme';
 const root = document.documentElement;
 
-function applyTheme(theme) {
-  root.setAttribute('data-theme', theme);
-  localStorage.setItem(THEME_KEY, theme);
+function applyTheme(theme, persist) {
+  if (theme === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+  } else {
+    root.removeAttribute('data-theme');
+    theme = 'light';
+  }
+  if (persist) localStorage.setItem(THEME_KEY, theme);
 }
 
 function toggleTheme() {
-  const current = root.getAttribute('data-theme');
-  applyTheme(current === 'dark' ? 'light' : 'dark');
+  const current = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  applyTheme(current === 'dark' ? 'light' : 'dark', true);
 }
 
-// Load saved theme
-(function () {
+// Theme: follow OS preference until the user explicitly toggles.
+(function initTheme() {
   const saved = localStorage.getItem(THEME_KEY);
-  if (saved) {
-    applyTheme(saved);
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    applyTheme('dark');
+  if (saved === 'dark' || saved === 'light') {
+    applyTheme(saved, false);
+    return;
   }
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  applyTheme(mq.matches ? 'dark' : 'light', false);
+  const onChange = (e) => {
+    if (!localStorage.getItem(THEME_KEY)) applyTheme(e.matches ? 'dark' : 'light', false);
+  };
+  if (mq.addEventListener) mq.addEventListener('change', onChange);
 })();
 
-// Scroll reveal
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.08 });
-
-document.querySelectorAll('.srv-card,.perk,.loc-card,.info-item,.team-card').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(20px)';
-  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-  obs.observe(el);
-});
-
-// Team Carousel (só roda se a página tiver o carrossel de equipe)
-const track = document.getElementById('teamTrack');
-if (track) {
-  let teamPos = 0;
-  const cards = track.querySelectorAll('.team-card');
-  const dotsContainer = document.getElementById('teamDots');
-
-  const getCardWidth = () => {
-    const card = cards[0];
-    const style = getComputedStyle(track);
-    const gap = parseInt(style.gap) || 24;
-    return card.offsetWidth + gap;
-  };
-  const getVisibleCount = () => {
-    const container = track.parentElement;
-    return Math.floor(container.offsetWidth / getCardWidth()) || 1;
-  };
-  const getMaxPos = () => Math.max(0, cards.length - getVisibleCount());
-  const buildDots = () => {
-    const max = getMaxPos();
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i <= max; i++) {
-      const dot = document.createElement('button');
-      dot.className = 'team-dot' + (i === teamPos ? ' active' : '');
-      dot.onclick = () => { teamPos = i; updateCarousel(); };
-      dotsContainer.appendChild(dot);
-    }
-  };
-  const updateCarousel = () => {
-    const max = getMaxPos();
-    if (teamPos < 0) teamPos = max;
-    if (teamPos > max) teamPos = 0;
-    track.style.transform = `translateX(-${teamPos * getCardWidth()}px)`;
-    buildDots();
-  };
-  window.slideTeam = (dir) => { teamPos += dir; updateCarousel(); };
-
-  buildDots();
-  updateCarousel();
-  window.addEventListener('resize', () => { teamPos = Math.min(teamPos, getMaxPos()); updateCarousel(); });
-
-  // Touch swipe for carousel
-  let touchStartX = 0;
-  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('touchend', e => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) window.slideTeam(diff > 0 ? 1 : -1);
-  }, { passive: true });
-}
-// Lightbox para as fotos da equipe
+// Scroll reveal — progressive: content visible without JS
 (function () {
-  const imgs = Array.from(document.querySelectorAll('.team-card-img'));
-  if (!imgs.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+  const targets = document.querySelectorAll(
+    '.reveal, .srv-card, .perk, .loc-card, .info-item, .team-card, .review-card, .trust-item, .proof-card'
+  );
+  if (!targets.length || !('IntersectionObserver' in window)) {
+    targets.forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+  targets.forEach(el => {
+    if (!el.classList.contains('reveal')) el.classList.add('reveal');
+  });
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+  targets.forEach(el => obs.observe(el));
+})();
 
+// Contador animado (trust strip)
+(function () {
+  const els = document.querySelectorAll('[data-counter]');
+  if (!els.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      io.unobserve(el);
+      const target = parseInt(el.dataset.target, 10) || 0;
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const dur = 900;
+      const t0 = performance.now();
+      const tick = (now) => {
+        const p = Math.min((now - t0) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + Math.round(eased * target) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.6 });
+  els.forEach((el) => io.observe(el));
+})();
+
+// ══ EQUIPE — dados + carrossel destaque (estilo Steam) + lightbox ══
+const TEAM = [
+  { img: 'assets/team-rosina.jpg',    full: 'assets/img2.jpg',  name: 'Rosina Helena',     role: 'Fundadora · Depilação & Design',    tag: 'Fundadora',   founder: true, desc: 'Profissional da beleza há mais de 10 anos, especialista em depilação e design de sobrancelhas. Atendimento humanizado desde 2016.' },
+  { img: 'assets/team-luana.jpg',     full: 'assets/img3.jpg',  name: 'Luana Silva',       role: 'Depilação & Sobrancelhas',          tag: 'Especialista', desc: 'Mais de 10 anos de experiência, com trabalho baseado em técnica, cuidado e respeito — sempre priorizando conforto e resultado.' },
+  { img: 'assets/team-ednalva.jpg',   full: 'assets/img1.jpg',  name: 'Ednalva Santos',    role: 'Esteticista',                       tag: 'Esteticista',  desc: 'Atua na área da beleza com dedicação ao cuidado da pele, bem-estar e autoestima, com tratamentos personalizados.' },
+  { img: 'assets/team-jheniffer.jpg', full: 'assets/img9.jpg',  name: 'Jheniffer Silva',   role: 'Sobrancelhas & Brow Lamination',    tag: 'Especialista', desc: 'Foco em valorizar o olhar respeitando a identidade de cada cliente, com resultados naturais e harmoniosos.' },
+  { img: 'assets/team-bruna.jpg',     full: 'assets/img6.jpg',  name: 'Bruna Célia',       role: 'Depilação',                         tag: 'Especialista', desc: 'Trabalho pautado em técnica, higiene, conforto e atendimento humanizado, respeitando a individualidade de cada pessoa.' },
+  { img: 'assets/team-rayssa.jpg',    full: 'assets/img7.jpg',  name: 'Rayssa dos Santos', role: 'Cílios & Sobrancelhas',             tag: 'Especialista', desc: 'Compromisso em realçar a beleza natural de cada cliente com técnica, cuidado e excelência no atendimento.' },
+  { img: 'assets/team-renata.jpg',    full: 'assets/img8.jpg',  name: 'Renata',            role: 'Recepcionista',                     tag: 'Atendimento',  desc: 'Responsável pelo acolhimento e atendimento de cada cliente com simpatia, organização e profissionalismo.' },
+  { img: 'assets/team-jaciana.jpg',   full: 'assets/img10.jpg', name: 'Jaciana',           role: 'Recepcionista',                     tag: 'Atendimento',  desc: 'Recebe cada cliente com carinho, atenção e respeito, para uma experiência mais leve e especial desde o primeiro contato.' }
+];
+
+const WA_BASE = 'https://wa.me/5583986697088?text=';
+
+const featured = document.getElementById('teamFeatured');
+if (featured) {
+  let idx = 0;
+  // Carrossel mostra as demais profissionais; a fundadora tem destaque próprio na página.
+  const roster = TEAM.filter((p) => !p.founder);
+  const n = roster.length;
+  const main = document.getElementById('tfMain');
+  const img = document.getElementById('tfImg');
+  const tag = document.getElementById('tfTag');
+  const name = document.getElementById('tfName');
+  const role = document.getElementById('tfRole');
+  const desc = document.getElementById('tfDesc');
+  const cta = document.getElementById('tfCta');
+  const peekL = document.getElementById('tfPeekLeft');
+  const peekR = document.getElementById('tfPeekRight');
+  const peekLImg = peekL.querySelector('img');
+  const peekRImg = peekR.querySelector('img');
+  const dots = document.getElementById('tfDots');
+  const prevBtn = document.getElementById('tfPrev');
+  const nextBtn = document.getElementById('tfNext');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  dots.innerHTML = '';
+  const dotEls = roster.map((p, i) => {
+    const d = document.createElement('button');
+    d.type = 'button';
+    d.className = 'tf-dot';
+    d.setAttribute('role', 'tab');
+    d.setAttribute('aria-label', 'Ver ' + p.name);
+    d.addEventListener('click', () => go(i));
+    dots.appendChild(d);
+    return d;
+  });
+
+  function fill() {
+    const p = roster[idx];
+    img.src = p.img;
+    img.alt = p.name;
+    tag.textContent = p.tag;
+    name.textContent = p.name;
+    role.textContent = p.role;
+    desc.textContent = p.desc;
+    cta.href = WA_BASE + encodeURIComponent('Olá! Quero agendar com ' + p.name);
+    cta.textContent = 'Agendar com ' + p.name.split(' ')[0];
+    peekLImg.src = roster[(idx - 1 + n) % n].img;
+    peekRImg.src = roster[(idx + 1) % n].img;
+    dotEls.forEach((d, i) => {
+      const on = i === idx;
+      d.classList.toggle('active', on);
+      d.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+
+  function go(i) {
+    idx = (i + n) % n;
+    if (reduceMotion) { fill(); return; }
+    main.classList.add('is-swapping');
+    setTimeout(() => {
+      fill();
+      main.classList.remove('is-swapping');
+    }, 180);
+  }
+
+  prevBtn.addEventListener('click', () => go(idx - 1));
+  nextBtn.addEventListener('click', () => go(idx + 1));
+  peekL.addEventListener('click', () => go(idx - 1));
+  peekR.addEventListener('click', () => go(idx + 1));
+
+  let touchX = 0;
+  const stage = featured.querySelector('.tf-stage');
+  stage.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchend', (e) => {
+    const diff = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) go(idx + (diff > 0 ? 1 : -1));
+  }, { passive: true });
+
+  fill();
+
+  // Lightbox da foto em destaque
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
-  let current = 0;
+  const caption = document.getElementById('lightboxCaption');
+  const photoBtn = document.querySelector('.tf-photo');
+  if (lightbox && lightboxImg && photoBtn) {
+    let lastFocus = null;
+    const paint = () => {
+      const p = roster[idx];
+      lightboxImg.src = p.full || p.img;
+      lightboxImg.alt = p.name;
+      if (caption) caption.textContent = p.name + ' · ' + p.role;
+    };
+    const open = () => {
+      lastFocus = document.activeElement;
+      paint();
+      lightbox.hidden = false;
+      lightbox.classList.add('open');
+      document.body.classList.add('lightbox-open');
+      const cb = document.getElementById('lightboxClose');
+      if (cb) cb.focus();
+    };
+    const close = () => {
+      lightbox.classList.remove('open');
+      lightbox.hidden = true;
+      document.body.classList.remove('lightbox-open');
+      lightboxImg.src = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    };
+    const step = (dir) => { go(idx + dir); paint(); };
 
-  function openLightbox(i) {
-    current = i;
-    lightboxImg.src = imgs[current].src;
-    lightboxImg.alt = imgs[current].alt;
-    lightbox.classList.add('open');
+    photoBtn.addEventListener('click', open);
+    const cb = document.getElementById('lightboxClose');
+    const lp = document.getElementById('lightboxPrev');
+    const ln = document.getElementById('lightboxNext');
+    if (cb) cb.addEventListener('click', close);
+    if (lp) lp.addEventListener('click', () => step(-1));
+    if (ln) ln.addEventListener('click', () => step(1));
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowRight') step(1);
+      if (e.key === 'ArrowLeft') step(-1);
+    });
   }
-  function closeLightbox() { lightbox.classList.remove('open'); }
-  function nextLightbox(dir) {
-    current = (current + dir + imgs.length) % imgs.length;
-    lightboxImg.src = imgs[current].src;
-    lightboxImg.alt = imgs[current].alt;
-  }
+}
 
-  imgs.forEach((img, i) => img.addEventListener('click', () => openLightbox(i)));
-  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
-  document.getElementById('lightboxPrev').addEventListener('click', () => nextLightbox(-1));
-  document.getElementById('lightboxNext').addEventListener('click', () => nextLightbox(1));
-  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-  document.addEventListener('keydown', (e) => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') nextLightbox(1);
-    if (e.key === 'ArrowLeft') nextLightbox(-1);
-  });
+// Lazy-load map when near viewport (or when local tab opens)
+(function () {
+  const mapEl = document.getElementById('dpylar-map');
+  if (!mapEl) return;
+
+  let mapInstance = null;
+
+  window.initDpylarMap = function () {
+    if (mapEl.dataset.ready) {
+      if (mapInstance) setTimeout(() => mapInstance.invalidateSize(), 80);
+      return;
+    }
+    if (typeof L === 'undefined') return;
+    mapEl.dataset.ready = '1';
+    const lat = -7.2382758, lng = -35.9235227;
+    mapInstance = L.map(mapEl, {
+      scrollWheelZoom: false,
+      zoomControl: true,
+      attributionControl: false
+    }).setView([lat, lng], 16);
+    L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(mapInstance);
+    const icon = L.icon({
+      iconUrl: 'assets/icon-loc.png',
+      iconSize: [40, 36],
+      iconAnchor: [20, 32],
+      className: 'icone-mapa-limpo'
+    });
+    const marker = L.marker([lat, lng], { icon: icon }).addTo(mapInstance);
+    marker.on('click', function () {
+      const endereco = "D'Pylar, Av. Plínio Lemos, 195 - Malvinas, Campina Grande - PB";
+      window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(endereco), '_blank');
+    });
+    mapInstance.on('focus', function () { mapInstance.scrollWheelZoom.enable(); });
+    mapInstance.on('blur', function () { mapInstance.scrollWheelZoom.disable(); });
+    setTimeout(() => mapInstance.invalidateSize(), 100);
+  };
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) {
+        window.initDpylarMap();
+        io.disconnect();
+      }
+    }, { rootMargin: '200px' });
+    io.observe(mapEl);
+  } else {
+    window.initDpylarMap();
+  }
 })();
+
+document.addEventListener('keydown', handleMobileMenuKeydown);
