@@ -351,7 +351,7 @@ function assetExists(reference) {
 }
 
 for (const page of PAGES) {
-  test(`${page}: mobile-bar tem somente a ação primária de agendamento`, () => {
+  test(`${page}: mobile-bar reúne contato e agendamento`, () => {
     const html = readHtml(page);
     const bars = elementsByClass(html, 'mobile-bar');
 
@@ -361,29 +361,34 @@ for (const page of PAGES) {
       const label = `${page} .mobile-bar #${index + 1}`;
       const primaryCount = htmlStartTags(bar.innerHtml)
         .filter((tag) => hasClass(tag, 'mb-primary')).length;
+      const secondaryCount = htmlStartTags(bar.innerHtml)
+        .filter((tag) => hasClass(tag, 'mb-secondary')).length;
 
       assert.equal(primaryCount, 1, `${label} deve conter exatamente uma .mb-primary`);
-      assert.match(textContent(bar.innerHtml), /Agendar horário/i, `${label} deve exibir “Agendar horário”`);
-      assert.equal(
-        htmlStartTags(bar.innerHtml).some((tag) => hasClass(tag, 'mb-secondary')),
-        false,
-        `${label} não deve conter .mb-secondary`,
-      );
-      assert.doesNotMatch(bar.innerHtml, /wa\.me/i, `${label} não deve conter link wa.me`);
+      assert.equal(secondaryCount, 1, `${label} deve conter exatamente uma .mb-secondary`);
+      assert.match(textContent(bar.innerHtml), /Agendar/i, `${label} deve exibir “Agendar”`);
+      assert.match(textContent(bar.innerHtml), /WhatsApp/i, `${label} deve exibir “WhatsApp”`);
     }
   });
 
-  test(`${page}: menu mobile oferece WhatsApp e alternância de tema`, () => {
+  test(`${page}: menu mobile oferece agendamento, WhatsApp e tema`, () => {
     const html = readHtml(page);
-    const whatsappItems = elementsByClass(html, 'mobile-menu-whatsapp');
-    const themeToggles = elementsByClass(html, 'mobile-theme-toggle');
+    const overlays = elementsByClass(html, 'mobile-overlay');
+    assert.equal(overlays.length, 1, `${page} deve conter exatamente um .mobile-overlay`);
 
-    assert.ok(whatsappItems.length > 0, `${page} deve conter class="mobile-menu-whatsapp"`);
-    for (const item of whatsappItems) {
-      assert.match(textContent(item.innerHtml), /WhatsApp/i, `${page} .mobile-menu-whatsapp deve exibir WhatsApp`);
-    }
+    const overlayHtml = overlays[0].innerHtml;
+    const menuCtas = elementsByClass(overlayHtml, 'mobile-menu-cta');
+    const whatsappItems = elementsByClass(overlayHtml, 'btn-wa-soft');
+    const schedulingItems = elementsByClass(overlayHtml, 'btn-mint');
+    const themeToggles = elementsByClass(overlayHtml, 'theme-toggle');
 
-    assert.ok(themeToggles.length > 0, `${page} deve conter class="mobile-theme-toggle"`);
+    assert.equal(menuCtas.length, 1, `${page} deve conter exatamente um .mobile-menu-cta`);
+    assert.equal(whatsappItems.length, 1, `${page} menu deve conter exatamente um .btn-wa-soft`);
+    assert.equal(schedulingItems.length, 1, `${page} menu deve conter exatamente um .btn-mint`);
+    assert.match(textContent(whatsappItems[0].innerHtml), /WhatsApp/i);
+    assert.match(textContent(schedulingItems[0].innerHtml), /Agendar/i);
+
+    assert.equal(themeToggles.length, 1, `${page} menu deve conter exatamente um .theme-toggle`);
     for (const toggle of themeToggles) {
       const accessibleDescription = [
         textContent(toggle.innerHtml),
@@ -393,7 +398,7 @@ for (const page of PAGES) {
       assert.match(
         accessibleDescription,
         /tema|claro|escuro/i,
-        `${page} .mobile-theme-toggle deve ter texto ou aria relacionado a tema`,
+        `${page} .theme-toggle do menu deve ter texto ou aria relacionado a tema`,
       );
     }
   });
@@ -450,15 +455,29 @@ test('páginas: ações mobile usam destinos canônicos', () => {
   const issues = [];
   for (const page of PAGES) {
     const html = readHtml(page);
-    const whatsapp = elementsByClass(html, 'mobile-menu-whatsapp');
+    const overlays = elementsByClass(html, 'mobile-overlay');
+    const menuWhatsapps = elementsByClass(overlays[0]?.innerHtml || '', 'btn-wa-soft');
+    const menuScheduling = elementsByClass(overlays[0]?.innerHtml || '', 'btn-mint');
+    const secondaries = elementsByClass(html, 'mobile-bar')
+      .flatMap((bar) => htmlStartTags(bar.innerHtml))
+      .filter((tag) => hasClass(tag, 'mb-secondary'));
     const primaries = elementsByClass(html, 'mobile-bar')
       .flatMap((bar) => htmlStartTags(bar.innerHtml))
       .filter((tag) => hasClass(tag, 'mb-primary'));
 
-    if (whatsapp.length !== 1
-      || !(attribute(whatsapp[0]?.openingTag || '', 'href') || '')
+    if (menuWhatsapps.length !== 1
+      || !(attribute(menuWhatsapps[0]?.openingTag || '', 'href') || '')
         .startsWith('https://wa.me/5583986697088')) {
-      issues.push(`${page}: mobile-menu-whatsapp`);
+      issues.push(`${page}: menu btn-wa-soft`);
+    }
+    if (menuScheduling.length !== 1
+      || attribute(menuScheduling[0]?.openingTag || '', 'href') !== 'https://www.trinks.com/dpylarcg') {
+      issues.push(`${page}: menu btn-mint`);
+    }
+    if (secondaries.length !== 1
+      || !(attribute(secondaries[0] || '', 'href') || '')
+        .startsWith('https://wa.me/5583986697088')) {
+      issues.push(`${page}: mb-secondary`);
     }
     if (primaries.length !== 1
       || attribute(primaries[0] || '', 'href') !== 'https://www.trinks.com/dpylarcg') {
@@ -644,9 +663,13 @@ test('style.css: MOBILE COMPACTO inicia uma media query de até 900px', () => {
   mobileCompactMedia(read('style.css'));
 });
 
-test('style.css: MOBILE COMPACTO oculta .float-wa', () => {
+test('style.css: MOBILE COMPACTO mantém .float-wa acima da barra', () => {
   const declarations = declarationsFor(mobileCompactMedia(read('style.css')), '.float-wa');
-  assert.match(declarationValue(declarations, 'display') || '', /^none\s*(?:!important)?$/i);
+  assert.match(declarationValue(declarations, 'display') || '', /^flex$/i);
+  assert.match(
+    declarationValue(declarations, 'bottom') || '',
+    /^calc\(\s*72px\s*\+\s*env\(\s*safe-area-inset-bottom\s*\)\s*\)$/i,
+  );
 });
 
 test('style.css: MOBILE COMPACTO reduz o padding de .page-hero', () => {
@@ -667,10 +690,14 @@ test('style.css: MOBILE COMPACTO expande .mobile-bar .mb-primary', () => {
   assert.match(declarationValue(declarations, 'flex') || '', /^1$/);
 });
 
-test('style.css: dark mobile usa contraste escuro nas ações', () => {
+test('style.css: ações da barra mobile mantêm contraste', () => {
   const media = mobileCompactMedia(read('style.css'));
-  const dark = declarationsFor(media, '[data-theme="dark"]');
-  assert.match(declarationValue(dark, '--on-action') || '', /^#0F1A15$/i);
+  const primary = declarationsFor(media, '.mobile-bar .mb-primary');
+  const secondary = declarationsFor(media, '.mobile-bar .mb-secondary');
+  assert.match(declarationValue(primary, 'background') || '', /^var\(--action\)$/i);
+  assert.match(declarationValue(primary, 'color') || '', /^#fff\s*(?:!important)?$/i);
+  assert.match(declarationValue(secondary, 'background') || '', /^var\(--mint-whisper\)$/i);
+  assert.match(declarationValue(secondary, 'color') || '', /^var\(--forest\)$/i);
 });
 
 test('style.css: nav mobile respeita o safe area superior', () => {
@@ -688,8 +715,9 @@ test('style.css: nav mobile respeita o safe area superior', () => {
   }
 });
 
-test('style.css: .tf-dot mobile tem alvo de toque mínimo de 44px', () => {
-  const declarations = declarationsFor(mobileCompactMedia(read('style.css')), '.tf-dot');
+test('style.css: .tf-dot mobile tem alvo de 44px e indicador visual compacto', () => {
+  const media = mobileCompactMedia(read('style.css'));
+  const declarations = declarationsFor(media, '.tf-dot');
   for (const axis of ['width', 'height']) {
     const value = declarationValue(declarations, `min-${axis}`)
       || declarationValue(declarations, axis) || '';
@@ -697,6 +725,10 @@ test('style.css: .tf-dot mobile tem alvo de toque mínimo de 44px', () => {
     assert.ok(pixels, `.tf-dot deve declarar ${axis} ou min-${axis} em px`);
     assert.ok(Number(pixels[1]) >= 44, `.tf-dot ${axis} efetivo deve ser pelo menos 44px`);
   }
+
+  const indicator = declarationsFor(media, '.tf-dot::before');
+  assert.match(declarationValue(indicator, 'width') || '', /^12px$/i);
+  assert.match(declarationValue(indicator, 'height') || '', /^12px$/i);
 });
 
 test('style.css: body reserva a barra e footer usa padding-bottom compacto', () => {
@@ -714,7 +746,7 @@ test('style.css: mobile-bar e links de confiança têm limites mobile', () => {
   const media = mobileCompactMedia(read('style.css'));
   const bar = declarationsFor(media, '.mobile-bar');
   const trustLink = declarationsFor(media, '.trust-item a');
-  assert.match(declarationValue(bar, 'max-width') || '', /^520px$/i);
+  assert.match(declarationValue(bar, 'max-width') || '', /^480px$/i);
   assert.match(declarationValue(trustLink, 'min-height') || '', /^44px$/i);
 });
 
@@ -763,13 +795,11 @@ test('style.css: forced colors mobile sobrescreve o foco de .tf-dot', () => {
   assert.ok(outline && !/^none(?:\s|$)/i.test(outline), '.tf-dot:focus-visible deve ter outline não-none');
 });
 
-test('style.css: botões WhatsApp mobile usam texto escuro sobre verde', () => {
+test('style.css: botão WhatsApp verde usa texto escuro no mobile', () => {
   const media = mobileCompactMedia(read('style.css'));
-  for (const selector of ['.mobile-overlay .mobile-menu-whatsapp', '.btn-whatsapp']) {
-    const declarations = declarationsFor(media, selector);
-    assert.match(declarationValue(declarations, 'background') || '', /^#25D366$/i);
-    assert.match(declarationValue(declarations, 'color') || '', /^#0F1A15$/i);
-  }
+  const declarations = declarationsFor(media, '.btn-whatsapp');
+  assert.match(declarationValue(declarations, 'background') || '', /^#25D366$/i);
+  assert.match(declarationValue(declarations, 'color') || '', /^#0F1A15$/i);
 });
 
 test('style.css: badges claros mantêm texto escuro no dark mobile', () => {
@@ -780,18 +810,25 @@ test('style.css: badges claros mantêm texto escuro no dark mobile', () => {
   }
 });
 
-test('style.css: imagem de serviço ocupa toda a largura no mobile', () => {
-  const declarations = declarationsFor(mobileCompactMedia(read('style.css')), '.srv-detail-img');
-  assert.match(declarationValue(declarations, 'width') || '', /^100%$/);
-  assert.match(declarationValue(declarations, 'max-height') || '', /^240px$/i);
+test('style.css: cards de serviço mantêm grade quadrada compacta', () => {
+  const css = read('style.css');
+  const media = mobileCompactMedia(css);
+  const grid = declarationsFor(media, '.srv-square-grid');
+  const card = declarationsFor(css, '.srv-square');
+  const image = declarationsFor(css, '.srv-square-img img');
+
+  assert.match(declarationValue(grid, 'gap') || '', /^10px$/i);
+  assert.match(declarationValue(card, 'width') || '', /^100%$/);
+  assert.match(declarationValue(card, 'aspect-ratio') || '', /^1\s*\/\s*1$/);
+  assert.match(declarationValue(image, 'width') || '', /^100%$/);
+  assert.match(declarationValue(image, 'height') || '', /^100%$/);
+  assert.match(declarationValue(image, 'object-fit') || '', /^cover$/i);
 });
 
 test('style.css: controles do carrossel não transbordam no mobile', () => {
   const media = mobileCompactMedia(read('style.css'));
-  const stage = declarationsFor(media, '.tf-stage');
   const dots = declarationsFor(media, '.tf-dots');
-  assert.match(declarationValue(stage, 'min-width') || '', /^0$/);
   assert.match(declarationValue(dots, 'flex-wrap') || '', /^wrap$/i);
-  assert.match(declarationValue(dots, 'gap') || '', /^0$/);
+  assert.match(declarationValue(dots, 'gap') || '', /^8px$/);
   assert.match(declarationValue(dots, 'max-width') || '', /^100%$/);
 });

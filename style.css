@@ -1996,7 +1996,7 @@ body.srv-modal-open { overflow: hidden; }
 
   .btn-whatsapp {
     background: #25D366;
-    color: #fff;
+    color: #0F1A15;
   }
 
   /* Barra inferior alinhada à marca (não “app alienígena”) */
@@ -2242,17 +2242,36 @@ body.srv-modal-open { overflow: hidden; }
     gap: 8px;
     max-width: 100%;
   }
-  /* área de toque maior sem virar pílula */
+  /* Área de toque acessível; o círculo visível continua compacto. */
   .tf-dot {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+  }
+  .tf-dot::before {
+    content: '';
     width: 12px;
     height: 12px;
-    min-width: 12px;
-    min-height: 12px;
+    border-radius: 50%;
+    background: var(--mint-pale);
+    transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
   }
   .tf-dot.active {
-    width: 12px;
-    height: 12px;
+    width: 44px;
+    height: 44px;
+    transform: none;
+    background: transparent;
+    box-shadow: none;
+  }
+  .tf-dot.active::before {
+    background: var(--action);
     transform: scale(1.25);
+    box-shadow: 0 0 0 3px rgba(38, 118, 83, 0.22);
   }
 
   [data-theme="dark"] .map-overlay-btn,
