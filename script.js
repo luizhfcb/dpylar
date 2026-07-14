@@ -168,8 +168,9 @@ function toggleTheme() {
 // ══ EQUIPE — carrossel no lugar do retrato (sempre começa com Rosina) ══
 const TEAM = [
   {
+    // img = corte limpo no carrossel | full = arte completa com balão de texto
     img: 'assets/team-rosina.jpg',
-    full: 'assets/team-rosina.jpg',
+    full: 'assets/img2.jpg',
     name: 'Rosina Helena',
     role: 'Fundadora · Depilação & Design de Sobrancelhas',
     tag: 'Fundadora',
@@ -178,7 +179,7 @@ const TEAM = [
   },
   {
     img: 'assets/team-luana.jpg',
-    full: 'assets/team-luana.jpg',
+    full: 'assets/img3.jpg',
     name: 'Luana Silva',
     role: 'Depilação & Sobrancelhas',
     tag: 'Especialista',
@@ -186,7 +187,7 @@ const TEAM = [
   },
   {
     img: 'assets/team-ednalva.jpg',
-    full: 'assets/team-ednalva.jpg',
+    full: 'assets/img1.jpg',
     name: 'Ednalva Santos',
     role: 'Esteticista',
     tag: 'Esteticista',
@@ -194,7 +195,7 @@ const TEAM = [
   },
   {
     img: 'assets/team-jheniffer.jpg',
-    full: 'assets/team-jheniffer.jpg',
+    full: 'assets/img9.jpg',
     name: 'Jheniffer Silva',
     role: 'Sobrancelhas & Brow Lamination',
     tag: 'Especialista',
@@ -202,7 +203,7 @@ const TEAM = [
   },
   {
     img: 'assets/team-bruna.jpg',
-    full: 'assets/team-bruna.jpg',
+    full: 'assets/img6.jpg',
     name: 'Bruna Célia',
     role: 'Depilação',
     tag: 'Especialista',
@@ -210,7 +211,7 @@ const TEAM = [
   },
   {
     img: 'assets/team-rayssa.jpg',
-    full: 'assets/team-rayssa.jpg',
+    full: 'assets/img7.jpg',
     name: 'Rayssa dos Santos',
     role: 'Cílios & Sobrancelhas',
     tag: 'Especialista',
@@ -218,7 +219,7 @@ const TEAM = [
   },
   {
     img: 'assets/team-renata.jpg',
-    full: 'assets/team-renata.jpg',
+    full: 'assets/img8.jpg',
     name: 'Renata',
     role: 'Recepcionista',
     tag: 'Atendimento',
@@ -226,7 +227,7 @@ const TEAM = [
   },
   {
     img: 'assets/team-jaciana.jpg',
-    full: 'assets/team-jaciana.jpg',
+    full: 'assets/img10.jpg',
     name: 'Jaciana',
     role: 'Recepcionista',
     tag: 'Atendimento',
@@ -269,6 +270,53 @@ if (featured) {
     return d;
   });
 
+  // Lightbox elements (antes de fill/go)
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxPanel = document.getElementById('lightboxPanel');
+  const lbTag = document.getElementById('lightboxTag');
+  const lbName = document.getElementById('lightboxName');
+  const lbRole = document.getElementById('lightboxRole');
+  const lbDesc = document.getElementById('lightboxDesc');
+  const lbCta = document.getElementById('lightboxCta');
+  const photoBtn = document.getElementById('tfPhotoBtn') || document.querySelector('.tf-photo');
+  const info = document.getElementById('tfInfo');
+
+  function applyPersonToLightbox(p, animate) {
+    if (!lightboxImg) return;
+    const write = () => {
+      // full = arte com balão de texto; fallback para o retrato limpo
+      lightboxImg.src = p.full || p.img;
+      lightboxImg.alt = p.name;
+      if (lbTag) lbTag.textContent = p.tag || '';
+      if (lbName) lbName.textContent = p.name || '';
+      if (lbRole) lbRole.textContent = p.role || '';
+      if (lbDesc) lbDesc.textContent = p.desc || '';
+      if (lbCta) {
+        lbCta.href = WA_BASE + encodeURIComponent('Olá! Quero agendar com ' + p.name);
+        lbCta.textContent = 'Agendar com ' + (p.name.split(' ')[0] || p.name);
+        lbCta.style.display = '';
+      }
+    };
+    if (animate && lightboxPanel && !reduceMotion) {
+      lightboxPanel.classList.remove('is-entering');
+      lightboxPanel.classList.add('is-swapping');
+      setTimeout(() => {
+        write();
+        requestAnimationFrame(() => {
+          lightboxPanel.classList.remove('is-swapping');
+          lightboxPanel.classList.add('is-entering');
+        });
+      }, 180);
+    } else {
+      write();
+      if (lightboxPanel) {
+        lightboxPanel.classList.remove('is-swapping');
+        lightboxPanel.classList.add('is-entering');
+      }
+    }
+  }
+
   function fill() {
     const p = roster[idx];
     if (img) {
@@ -287,6 +335,9 @@ if (featured) {
       if (p.founder) badge.removeAttribute('hidden');
       else badge.setAttribute('hidden', '');
     }
+    if (lightbox && lightbox.classList.contains('open')) {
+      applyPersonToLightbox(p, true);
+    }
     dotEls.forEach((d, i) => {
       const on = i === idx;
       d.classList.toggle('active', on);
@@ -301,10 +352,12 @@ if (featured) {
       return;
     }
     main.classList.add('is-swapping');
+    if (info) info.classList.add('is-swapping');
     setTimeout(() => {
       fill();
       main.classList.remove('is-swapping');
-    }, 180);
+      if (info) info.classList.remove('is-swapping');
+    }, 240);
   }
 
   if (prevBtn) prevBtn.addEventListener('click', () => go(idx - 1));
@@ -320,38 +373,43 @@ if (featured) {
 
   fill();
 
-  // Lightbox / expandir foto
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightboxImg');
-  const caption = document.getElementById('lightboxCaption');
-  const photoBtn = document.getElementById('tfPhotoBtn') || document.querySelector('.tf-photo');
   if (lightbox && lightboxImg && photoBtn) {
     let lastFocus = null;
-    const paint = () => {
-      const p = roster[idx];
-      lightboxImg.src = p.full || p.img;
-      lightboxImg.alt = p.name;
-      if (caption) caption.textContent = p.name + ' · ' + p.role;
-    };
     const open = () => {
       lastFocus = document.activeElement;
-      paint();
+      const p = roster[idx];
+      // arte completa com balão (full), para o painel não abrir vazio
+      lightboxImg.src = p.full || p.img;
+      lightboxImg.alt = p.name;
+      if (lbTag) lbTag.textContent = p.tag || '';
+      if (lbName) lbName.textContent = p.name || '';
+      if (lbRole) lbRole.textContent = p.role || '';
+      if (lbDesc) lbDesc.textContent = p.desc || '';
+      if (lbCta) {
+        lbCta.href = WA_BASE + encodeURIComponent('Olá! Quero agendar com ' + p.name);
+        lbCta.textContent = 'Agendar com ' + (p.name.split(' ')[0] || p.name);
+      }
+      lightbox.removeAttribute('hidden');
       lightbox.hidden = false;
-      lightbox.classList.add('open');
+      if (lightboxPanel) {
+        lightboxPanel.classList.remove('is-swapping');
+        lightboxPanel.classList.add('is-entering');
+      }
+      requestAnimationFrame(() => {
+        lightbox.classList.add('open');
+      });
       document.body.classList.add('lightbox-open');
       const cb = document.getElementById('lightboxClose');
       if (cb) cb.focus();
     };
     const close = () => {
       lightbox.classList.remove('open');
+      if (lightboxPanel) lightboxPanel.classList.remove('is-entering', 'is-swapping');
       lightbox.hidden = true;
+      lightbox.setAttribute('hidden', '');
       document.body.classList.remove('lightbox-open');
       lightboxImg.src = '';
       if (lastFocus && lastFocus.focus) lastFocus.focus();
-    };
-    const step = (dir) => {
-      go(idx + dir);
-      paint();
     };
 
     photoBtn.addEventListener('click', open);
@@ -359,16 +417,16 @@ if (featured) {
     const lp = document.getElementById('lightboxPrev');
     const ln = document.getElementById('lightboxNext');
     if (cb) cb.addEventListener('click', close);
-    if (lp) lp.addEventListener('click', () => step(-1));
-    if (ln) ln.addEventListener('click', () => step(1));
+    if (lp) lp.addEventListener('click', () => go(idx - 1));
+    if (ln) ln.addEventListener('click', () => go(idx + 1));
     lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox || e.target.classList.contains('lightbox-inner')) close();
+      if (e.target === lightbox) close();
     });
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('open')) return;
       if (e.key === 'Escape') close();
-      if (e.key === 'ArrowRight') step(1);
-      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') go(idx + 1);
+      if (e.key === 'ArrowLeft') go(idx - 1);
     });
   }
 }
