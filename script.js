@@ -165,25 +165,82 @@ function toggleTheme() {
   els.forEach((el) => io.observe(el));
 })();
 
-// ══ EQUIPE — dados + carrossel destaque (estilo Steam) + lightbox ══
+// ══ EQUIPE — carrossel no lugar do retrato (sempre começa com Rosina) ══
 const TEAM = [
-  { img: 'assets/team-rosina.jpg',    full: 'assets/img2.jpg',  name: 'Rosina Helena',     role: 'Fundadora · Depilação & Design',    tag: 'Fundadora',   founder: true, desc: 'Profissional da beleza há mais de 10 anos, especialista em depilação e design de sobrancelhas. Atendimento humanizado desde 2016.' },
-  { img: 'assets/team-luana.jpg',     full: 'assets/img3.jpg',  name: 'Luana Silva',       role: 'Depilação & Sobrancelhas',          tag: 'Especialista', desc: 'Mais de 10 anos de experiência, com trabalho baseado em técnica, cuidado e respeito — sempre priorizando conforto e resultado.' },
-  { img: 'assets/team-ednalva.jpg',   full: 'assets/img1.jpg',  name: 'Ednalva Santos',    role: 'Esteticista',                       tag: 'Esteticista',  desc: 'Atua na área da beleza com dedicação ao cuidado da pele, bem-estar e autoestima, com tratamentos personalizados.' },
-  { img: 'assets/team-jheniffer.jpg', full: 'assets/img9.jpg',  name: 'Jheniffer Silva',   role: 'Sobrancelhas & Brow Lamination',    tag: 'Especialista', desc: 'Foco em valorizar o olhar respeitando a identidade de cada cliente, com resultados naturais e harmoniosos.' },
-  { img: 'assets/team-bruna.jpg',     full: 'assets/img6.jpg',  name: 'Bruna Célia',       role: 'Depilação',                         tag: 'Especialista', desc: 'Trabalho pautado em técnica, higiene, conforto e atendimento humanizado, respeitando a individualidade de cada pessoa.' },
-  { img: 'assets/team-rayssa.jpg',    full: 'assets/img7.jpg',  name: 'Rayssa dos Santos', role: 'Cílios & Sobrancelhas',             tag: 'Especialista', desc: 'Compromisso em realçar a beleza natural de cada cliente com técnica, cuidado e excelência no atendimento.' },
-  { img: 'assets/team-renata.jpg',    full: 'assets/img8.jpg',  name: 'Renata',            role: 'Recepcionista',                     tag: 'Atendimento',  desc: 'Responsável pelo acolhimento e atendimento de cada cliente com simpatia, organização e profissionalismo.' },
-  { img: 'assets/team-jaciana.jpg',   full: 'assets/img10.jpg', name: 'Jaciana',           role: 'Recepcionista',                     tag: 'Atendimento',  desc: 'Recebe cada cliente com carinho, atenção e respeito, para uma experiência mais leve e especial desde o primeiro contato.' }
+  {
+    img: 'assets/team-rosina.jpg',
+    full: 'assets/team-rosina.jpg',
+    name: 'Rosina Helena',
+    role: 'Fundadora · Depilação & Design de Sobrancelhas',
+    tag: 'Fundadora',
+    founder: true,
+    desc: 'Profissional da beleza há mais de 10 anos, especialista em depilação e design de sobrancelhas. Fundou a D\'Pylar em 2016 com uma missão clara: oferecer atendimento humanizado, com excelência e cuidado em cada detalhe.'
+  },
+  {
+    img: 'assets/team-luana.jpg',
+    full: 'assets/team-luana.jpg',
+    name: 'Luana Silva',
+    role: 'Depilação & Sobrancelhas',
+    tag: 'Especialista',
+    desc: 'Mais de 10 anos de experiência, com trabalho baseado em técnica, cuidado e respeito — sempre priorizando conforto e resultado.'
+  },
+  {
+    img: 'assets/team-ednalva.jpg',
+    full: 'assets/team-ednalva.jpg',
+    name: 'Ednalva Santos',
+    role: 'Esteticista',
+    tag: 'Esteticista',
+    desc: 'Atua na área da beleza com dedicação ao cuidado da pele, bem-estar e autoestima, com tratamentos personalizados.'
+  },
+  {
+    img: 'assets/team-jheniffer.jpg',
+    full: 'assets/team-jheniffer.jpg',
+    name: 'Jheniffer Silva',
+    role: 'Sobrancelhas & Brow Lamination',
+    tag: 'Especialista',
+    desc: 'Foco em valorizar o olhar respeitando a identidade de cada cliente, com resultados naturais e harmoniosos.'
+  },
+  {
+    img: 'assets/team-bruna.jpg',
+    full: 'assets/team-bruna.jpg',
+    name: 'Bruna Célia',
+    role: 'Depilação',
+    tag: 'Especialista',
+    desc: 'Trabalho pautado em técnica, higiene, conforto e atendimento humanizado, respeitando a individualidade de cada pessoa.'
+  },
+  {
+    img: 'assets/team-rayssa.jpg',
+    full: 'assets/team-rayssa.jpg',
+    name: 'Rayssa dos Santos',
+    role: 'Cílios & Sobrancelhas',
+    tag: 'Especialista',
+    desc: 'Compromisso em realçar a beleza natural de cada cliente com técnica, cuidado e excelência no atendimento.'
+  },
+  {
+    img: 'assets/team-renata.jpg',
+    full: 'assets/team-renata.jpg',
+    name: 'Renata',
+    role: 'Recepcionista',
+    tag: 'Atendimento',
+    desc: 'Responsável pelo acolhimento e atendimento de cada cliente com simpatia, organização e profissionalismo.'
+  },
+  {
+    img: 'assets/team-jaciana.jpg',
+    full: 'assets/team-jaciana.jpg',
+    name: 'Jaciana',
+    role: 'Recepcionista',
+    tag: 'Atendimento',
+    desc: 'Recebe cada cliente com carinho, atenção e respeito, para uma experiência mais leve e especial desde o primeiro contato.'
+  }
 ];
 
 const WA_BASE = 'https://wa.me/5583986697088?text=';
 
 const featured = document.getElementById('teamFeatured');
 if (featured) {
+  // Sempre começa com Rosina (índice 0 do array TEAM)
   let idx = 0;
-  // Carrossel mostra as demais profissionais; a fundadora tem destaque próprio na página.
-  const roster = TEAM.filter((p) => !p.founder);
+  const roster = TEAM;
   const n = roster.length;
   const main = document.getElementById('tfMain');
   const img = document.getElementById('tfImg');
@@ -192,16 +249,15 @@ if (featured) {
   const role = document.getElementById('tfRole');
   const desc = document.getElementById('tfDesc');
   const cta = document.getElementById('tfCta');
-  const peekL = document.getElementById('tfPeekLeft');
-  const peekR = document.getElementById('tfPeekRight');
-  const peekLImg = peekL.querySelector('img');
-  const peekRImg = peekR.querySelector('img');
+  const badge = document.getElementById('tfBadge');
   const dots = document.getElementById('tfDots');
   const prevBtn = document.getElementById('tfPrev');
   const nextBtn = document.getElementById('tfNext');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  dots.innerHTML = '';
+  if (dots) {
+    dots.innerHTML = '';
+  }
   const dotEls = roster.map((p, i) => {
     const d = document.createElement('button');
     d.type = 'button';
@@ -209,22 +265,28 @@ if (featured) {
     d.setAttribute('role', 'tab');
     d.setAttribute('aria-label', 'Ver ' + p.name);
     d.addEventListener('click', () => go(i));
-    dots.appendChild(d);
+    if (dots) dots.appendChild(d);
     return d;
   });
 
   function fill() {
     const p = roster[idx];
-    img.src = p.img;
-    img.alt = p.name;
-    tag.textContent = p.tag;
-    name.textContent = p.name;
-    role.textContent = p.role;
-    desc.textContent = p.desc;
-    cta.href = WA_BASE + encodeURIComponent('Olá! Quero agendar com ' + p.name);
-    cta.textContent = 'Agendar com ' + p.name.split(' ')[0];
-    peekLImg.src = roster[(idx - 1 + n) % n].img;
-    peekRImg.src = roster[(idx + 1) % n].img;
+    if (img) {
+      img.src = p.img;
+      img.alt = p.name;
+    }
+    if (tag) tag.textContent = p.tag;
+    if (name) name.textContent = p.name;
+    if (role) role.textContent = p.role;
+    if (desc) desc.textContent = p.desc;
+    if (cta) {
+      cta.href = WA_BASE + encodeURIComponent('Olá! Quero agendar com ' + p.name);
+      cta.textContent = 'Agendar com ' + p.name.split(' ')[0];
+    }
+    if (badge) {
+      if (p.founder) badge.removeAttribute('hidden');
+      else badge.setAttribute('hidden', '');
+    }
     dotEls.forEach((d, i) => {
       const on = i === idx;
       d.classList.toggle('active', on);
@@ -234,7 +296,10 @@ if (featured) {
 
   function go(i) {
     idx = (i + n) % n;
-    if (reduceMotion) { fill(); return; }
+    if (reduceMotion || !main) {
+      fill();
+      return;
+    }
     main.classList.add('is-swapping');
     setTimeout(() => {
       fill();
@@ -242,13 +307,11 @@ if (featured) {
     }, 180);
   }
 
-  prevBtn.addEventListener('click', () => go(idx - 1));
-  nextBtn.addEventListener('click', () => go(idx + 1));
-  peekL.addEventListener('click', () => go(idx - 1));
-  peekR.addEventListener('click', () => go(idx + 1));
+  if (prevBtn) prevBtn.addEventListener('click', () => go(idx - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => go(idx + 1));
 
   let touchX = 0;
-  const stage = featured.querySelector('.tf-stage');
+  const stage = featured.querySelector('.tf-photo-row') || featured;
   stage.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
   stage.addEventListener('touchend', (e) => {
     const diff = touchX - e.changedTouches[0].clientX;
@@ -257,11 +320,11 @@ if (featured) {
 
   fill();
 
-  // Lightbox da foto em destaque
+  // Lightbox / expandir foto
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const caption = document.getElementById('lightboxCaption');
-  const photoBtn = document.querySelector('.tf-photo');
+  const photoBtn = document.getElementById('tfPhotoBtn') || document.querySelector('.tf-photo');
   if (lightbox && lightboxImg && photoBtn) {
     let lastFocus = null;
     const paint = () => {
@@ -286,7 +349,10 @@ if (featured) {
       lightboxImg.src = '';
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     };
-    const step = (dir) => { go(idx + dir); paint(); };
+    const step = (dir) => {
+      go(idx + dir);
+      paint();
+    };
 
     photoBtn.addEventListener('click', open);
     const cb = document.getElementById('lightboxClose');
@@ -295,7 +361,9 @@ if (featured) {
     if (cb) cb.addEventListener('click', close);
     if (lp) lp.addEventListener('click', () => step(-1));
     if (ln) ln.addEventListener('click', () => step(1));
-    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-inner')) close();
+    });
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('open')) return;
       if (e.key === 'Escape') close();
@@ -356,3 +424,90 @@ if (featured) {
 })();
 
 document.addEventListener('keydown', handleMobileMenuKeydown);
+
+// Serviços: cards quadrados → modal com detalhes
+(function () {
+  const cards = Array.from(document.querySelectorAll('[data-service]'));
+  const modal = document.getElementById('srvModal');
+  if (!cards.length || !modal) return;
+
+  const imgEl = document.getElementById('srvModalImg');
+  const titleEl = document.getElementById('srvModalTitle');
+  const chipEl = document.getElementById('srvModalChip');
+  const summaryEl = document.getElementById('srvModalSummary');
+  const factsEl = document.getElementById('srvModalFacts');
+  const ctaEl = document.getElementById('srvModalCta');
+  let lastFocus = null;
+
+  function openService(card) {
+    lastFocus = document.activeElement;
+    const title = card.getAttribute('data-title') || '';
+    const chip = card.getAttribute('data-chip') || '';
+    const img = card.getAttribute('data-img') || '';
+    const summary = card.getAttribute('data-summary') || '';
+    const wa = card.getAttribute('data-wa') || '#';
+    const cta = card.getAttribute('data-cta') || 'Agendar';
+    let facts = [];
+    try { facts = JSON.parse(card.getAttribute('data-facts') || '[]'); } catch (e) { facts = []; }
+
+    if (imgEl) {
+      imgEl.src = img;
+      imgEl.alt = title;
+    }
+    if (titleEl) titleEl.textContent = title;
+    if (chipEl) chipEl.textContent = chip;
+    if (summaryEl) summaryEl.textContent = summary;
+    if (factsEl) {
+      factsEl.innerHTML = '';
+      facts.forEach((row) => {
+        const li = document.createElement('li');
+        const strong = document.createElement('strong');
+        strong.textContent = row[0] || '';
+        li.appendChild(strong);
+        li.appendChild(document.createTextNode(row[1] || ''));
+        factsEl.appendChild(li);
+      });
+    }
+    if (ctaEl) {
+      ctaEl.href = wa;
+      ctaEl.textContent = cta;
+    }
+
+    modal.hidden = false;
+    modal.classList.add('open');
+    document.body.classList.add('srv-modal-open');
+    const closeBtn = modal.querySelector('.srv-modal-close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeService() {
+    modal.classList.remove('open');
+    modal.hidden = true;
+    document.body.classList.remove('srv-modal-open');
+    if (imgEl) imgEl.src = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => openService(card));
+  });
+
+  modal.querySelectorAll('[data-close-srv]').forEach((el) => {
+    el.addEventListener('click', closeService);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeService();
+  });
+
+  // Deep-link: #cera, #cilios, etc.
+  function openFromHash() {
+    const id = (location.hash || '').replace('#', '');
+    if (!id) return;
+    const card = document.getElementById(id);
+    if (card && card.hasAttribute('data-service')) openService(card);
+  }
+  window.addEventListener('hashchange', openFromHash);
+  openFromHash();
+})();

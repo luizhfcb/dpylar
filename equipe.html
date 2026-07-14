@@ -79,82 +79,52 @@
 <section class="page-hero">
   <span class="section-tag">Nossa equipe</span>
   <h1>Quem cuida de <em>você</em></h1>
-  <p>Profissionais dedicadas, com técnica e compromisso com o seu bem-estar em cada atendimento.</p>
+  <p>Conheça as profissionais da D'Pylar. Começamos pela fundadora — deslize para ver o time completo.</p>
 </section>
 
-<!-- ══ FUNDADORA EM DESTAQUE ══ -->
-<section class="section founder" id="fundadora">
+<!-- ══ EQUIPE: carrossel no lugar do retrato (começa com Rosina) ══ -->
+<section class="section founder" id="equipe">
   <div class="section-inner">
-    <div class="founder-layout">
+    <div class="founder-layout" id="teamFeatured">
+
       <div class="founder-visual">
-        <div class="founder-frame">
-          <img src="assets/team-rosina.jpg" width="640" height="800" alt="Rosina Helena, fundadora da D'Pylar" loading="lazy">
-        </div>
-        <div class="founder-badge">
-          <div class="founder-badge-num">2016</div>
-          <div class="founder-badge-label">desde o início</div>
-        </div>
-      </div>
-      <div class="founder-text">
-        <span class="section-tag">Fundadora</span>
-        <h2>Rosina Helena</h2>
-        <div class="founder-role">Fundadora · Depilação &amp; Design de Sobrancelhas</div>
-        <p>Profissional da beleza há mais de 10 anos, especialista em depilação e design de sobrancelhas. Fundou a D'Pylar em 2016 com uma missão clara: oferecer atendimento humanizado, com excelência e cuidado em cada detalhe.</p>
-        <p>À frente do estúdio, lidera uma equipe que trata cada cliente com respeito, técnica e acolhimento — para que a experiência vá muito além do procedimento.</p>
-        <a href="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20com%20Rosina" class="btn btn-mint" target="_blank" rel="noopener">Agendar com Rosina</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ CARROSSEL: DEMAIS PROFISSIONAIS ══ -->
-<section class="section team" id="equipe">
-  <div class="section-inner">
-    <div class="section-header center">
-      <span class="section-tag">Time D'Pylar</span>
-      <h2 class="section-title">As profissionais do estúdio</h2>
-      <p class="section-sub">Cada uma especialista no que faz, unidas pelo mesmo cuidado com você.</p>
-    </div>
-
-    <div class="team-featured" id="teamFeatured">
-      <button type="button" class="tf-arrow tf-prev" id="tfPrev" aria-label="Profissional anterior">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-
-      <div class="tf-stage">
-        <button type="button" class="tf-peek tf-peek-left" id="tfPeekLeft" aria-label="Ver profissional anterior">
-          <img src="assets/team-jaciana.jpg" alt="" loading="lazy">
-        </button>
-
-        <article class="tf-main" id="tfMain">
-          <button type="button" class="tf-photo" data-team-lightbox aria-label="Ampliar foto">
-            <img id="tfImg" src="assets/team-luana.jpg" width="640" height="800" alt="Luana Silva" loading="lazy">
-            <span class="tf-expand" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></span>
+        <div class="tf-photo-row">
+          <button type="button" class="tf-arrow tf-prev" id="tfPrev" aria-label="Profissional anterior">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <div class="tf-info">
-            <span class="tf-tag" id="tfTag">Especialista</span>
-            <h3 class="tf-name" id="tfName">Luana Silva</h3>
-            <div class="tf-role" id="tfRole">Depilação &amp; Sobrancelhas</div>
-            <p class="tf-desc" id="tfDesc">Mais de 10 anos de experiência, com trabalho baseado em técnica, cuidado e respeito.</p>
-            <a class="btn btn-mint tf-cta" id="tfCta" href="https://www.trinks.com/dpylarcg" target="_blank" rel="noopener">Agendar horário</a>
-          </div>
-        </article>
 
-        <button type="button" class="tf-peek tf-peek-right" id="tfPeekRight" aria-label="Ver próxima profissional">
-          <img src="assets/team-ednalva.jpg" alt="" loading="lazy">
-        </button>
+          <div class="founder-frame tf-frame" id="tfMain">
+            <button type="button" class="tf-photo" id="tfPhotoBtn" aria-label="Ampliar foto da profissional">
+              <img id="tfImg" class="team-portrait" src="assets/team-rosina.jpg" width="640" height="800" alt="Rosina Helena" fetchpriority="high">
+              <span class="tf-expand" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </span>
+            </button>
+            <div class="founder-badge" id="tfBadge" hidden>
+              <div class="founder-badge-num">2016</div>
+              <div class="founder-badge-label">desde o início</div>
+            </div>
+          </div>
+
+          <button type="button" class="tf-arrow tf-next" id="tfNext" aria-label="Próxima profissional">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+        </div>
+        <div class="tf-dots" id="tfDots" role="tablist" aria-label="Navegação da equipe"></div>
       </div>
 
-      <button type="button" class="tf-arrow tf-next" id="tfNext" aria-label="Próxima profissional">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
-      </button>
+      <div class="founder-text" id="tfInfo">
+        <span class="section-tag" id="tfTag">Fundadora</span>
+        <h2 id="tfName">Rosina Helena</h2>
+        <div class="founder-role" id="tfRole">Fundadora · Depilação &amp; Design de Sobrancelhas</div>
+        <p id="tfDesc">Profissional da beleza há mais de 10 anos, especialista em depilação e design de sobrancelhas. Fundou a D'Pylar em 2016 com uma missão clara: oferecer atendimento humanizado, com excelência e cuidado em cada detalhe.</p>
+        <a href="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20com%20Rosina" class="btn btn-mint" id="tfCta" target="_blank" rel="noopener">Agendar com Rosina</a>
+      </div>
 
-      <div class="tf-dots" id="tfDots" role="tablist" aria-label="Navegação da equipe"></div>
     </div>
   </div>
 </section>
 
-<!-- ══ CTA ══ -->
 <section class="cta" id="contato">
   <div class="cta-inner">
     <span class="section-tag">Agende seu horário</span>
@@ -216,7 +186,6 @@
   </div>
 </footer>
 
-<!-- Lightbox equipe -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada da equipe" hidden>
   <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Fechar">
     <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
