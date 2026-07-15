@@ -317,12 +317,15 @@ if (featured) {
     }
   }
 
-  function fill() {
-    const p = roster[idx];
-    if (img) {
-      img.src = p.img;
-      img.alt = p.name;
-    }
+  const SLIDE_MS = 420;
+  const TEXT_MS = 220;
+  let animating = false;
+  let pending = null; // { i, dir }
+  const imgNext = document.getElementById('tfImgNext');
+  let activeImg = img;
+  let idleImg = imgNext;
+
+  function applyMeta(p) {
     if (tag) tag.textContent = p.tag;
     if (name) name.textContent = p.name;
     if (role) role.textContent = p.role;
@@ -345,30 +348,154 @@ if (featured) {
     });
   }
 
-  function go(i) {
-    idx = (i + n) % n;
-    if (reduceMotion || !main) {
+  function fill() {
+    const p = roster[idx];
+    if (activeImg) {
+      activeImg.src = p.img;
+      activeImg.alt = p.name;
+      activeImg.className = 'team-portrait is-active';
+    }
+    if (idleImg) {
+      idleImg.removeAttribute('alt');
+      idleImg.setAttribute('aria-hidden', 'true');
+      idleImg.className = 'team-portrait';
+    }
+    applyMeta(p);
+  }
+
+  function whenImageReady(src) {
+    return new Promise((resolve) => {
+      if (!src) {
+        resolve();
+        return;
+      }
+      const pre = new Image();
+      let settled = false;
+      const done = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      pre.onload = done;
+      pre.onerror = done;
+      pre.src = src;
+      if (pre.complete) done();
+    });
+  }
+
+  function clearSlideClasses(el) {
+    if (!el) return;
+    el.classList.remove(
+      'is-active',
+      'is-exit-next',
+      'is-exit-prev',
+      'is-enter-next',
+      'is-enter-prev',
+      'is-in'
+    );
+  }
+
+  function finishSlide() {
+    animating = false;
+    if (pending) {
+      const job = pending;
+      pending = null;
+      go(job.i, job.dir);
+    }
+  }
+
+  function slideTo(nextIdx, dir) {
+    const p = roster[nextIdx];
+    if (!activeImg || !idleImg || reduceMotion) {
+      idx = nextIdx;
+      fill();
+      finishSlide();
+      return;
+    }
+
+    animating = true;
+    idx = nextIdx;
+
+    if (info) info.classList.add('is-swapping');
+    window.setTimeout(() => {
+      applyMeta(p);
+      if (info) info.classList.remove('is-swapping');
+    }, TEXT_MS);
+
+    whenImageReady(p.img).then(() => {
+      // Camada de entrada posicionada fora da tela (sem transition)
+      clearSlideClasses(idleImg);
+      idleImg.src = p.img;
+      idleImg.alt = p.name;
+      idleImg.removeAttribute('aria-hidden');
+      idleImg.classList.add(dir > 0 ? 'is-enter-next' : 'is-enter-prev');
+      void idleImg.offsetWidth;
+
+      // Atual sai e a nova entra no mesmo gesto
+      activeImg.classList.remove('is-active');
+      activeImg.classList.add(dir > 0 ? 'is-exit-next' : 'is-exit-prev');
+      activeImg.setAttribute('aria-hidden', 'true');
+      activeImg.removeAttribute('alt');
+      idleImg.classList.add('is-in');
+
+      window.setTimeout(() => {
+        clearSlideClasses(activeImg);
+        clearSlideClasses(idleImg);
+        idleImg.classList.add('is-active');
+        const tmp = activeImg;
+        activeImg = idleImg;
+        idleImg = tmp;
+        finishSlide();
+      }, SLIDE_MS);
+    });
+  }
+
+  function resolveDir(from, to, forcedDir) {
+    if (forcedDir === 1 || forcedDir === -1) return forcedDir;
+    // menor caminho no loop do carrossel
+    const forward = (to - from + n) % n;
+    const backward = (from - to + n) % n;
+    return forward <= backward ? 1 : -1;
+  }
+
+  function go(i, forcedDir) {
+    const next = ((i % n) + n) % n;
+    if (next === idx && !animating) return;
+
+    const dir = resolveDir(idx, next, forcedDir);
+
+    if (reduceMotion || !main || !imgNext) {
+      idx = next;
+      pending = null;
+      animating = false;
       fill();
       return;
     }
-    main.classList.add('is-swapping');
-    if (info) info.classList.add('is-swapping');
-    setTimeout(() => {
-      fill();
-      main.classList.remove('is-swapping');
-      if (info) info.classList.remove('is-swapping');
-    }, 240);
+
+    if (animating) {
+      pending = { i: next, dir };
+      return;
+    }
+
+    slideTo(next, dir);
   }
 
-  if (prevBtn) prevBtn.addEventListener('click', () => go(idx - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => go(idx + 1));
+  // Pré-carrega retratos para o deslize não “travar”
+  roster.forEach((p) => {
+    if (!p.img) return;
+    const pre = new Image();
+    pre.src = p.img;
+  });
+
+  if (prevBtn) prevBtn.addEventListener('click', () => go(idx - 1, -1));
+  if (nextBtn) nextBtn.addEventListener('click', () => go(idx + 1, 1));
 
   let touchX = 0;
   const stage = featured.querySelector('.tf-photo-row') || featured;
   stage.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
   stage.addEventListener('touchend', (e) => {
     const diff = touchX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) go(idx + (diff > 0 ? 1 : -1));
+    if (Math.abs(diff) > 50) go(idx + (diff > 0 ? 1 : -1), diff > 0 ? 1 : -1);
   }, { passive: true });
 
   fill();
@@ -492,6 +619,7 @@ document.addEventListener('keydown', handleMobileMenuKeydown);
   const imgEl = document.getElementById('srvModalImg');
   const titleEl = document.getElementById('srvModalTitle');
   const chipEl = document.getElementById('srvModalChip');
+  const priceEl = document.getElementById('srvModalPrice');
   const summaryEl = document.getElementById('srvModalSummary');
   const factsEl = document.getElementById('srvModalFacts');
   const ctaEl = document.getElementById('srvModalCta');
@@ -514,6 +642,11 @@ document.addEventListener('keydown', handleMobileMenuKeydown);
     }
     if (titleEl) titleEl.textContent = title;
     if (chipEl) chipEl.textContent = chip;
+    if (priceEl) {
+      const price = (card.getAttribute('data-price') || '').trim();
+      priceEl.textContent = price;
+      priceEl.hidden = !price;
+    }
     if (summaryEl) summaryEl.textContent = summary;
     if (factsEl) {
       factsEl.innerHTML = '';

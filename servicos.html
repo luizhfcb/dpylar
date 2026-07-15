@@ -11,11 +11,55 @@
 <meta property="og:title" content="Serviços | D'Pylar — Campina Grande">
 <meta property="og:description" content="Cuidados para pele e olhar: depilação, sobrancelhas, cílios e estética com técnica e higiene.">
 <meta property="og:image" content="https://dpylar.vercel.app/assets/logo.png">
-<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Preciso agendar ou posso chegar sem hora marcada?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Recomendamos agendar pelo Trinks ou pelo WhatsApp (83) 98669-7088 para garantir seu horário com a profissional de sua preferência." }
+    },
+    {
+      "@type": "Question",
+      "name": "Qual o horário de funcionamento?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Terça a sexta, das 9h às 19h. Sábado, das 9h às 18h." }
+    },
+    {
+      "@type": "Question",
+      "name": "Vocês atendem homens e crianças?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sim. Atendemos público feminino e masculino, adultos e crianças." }
+    },
+    {
+      "@type": "Question",
+      "name": "Como funciona a higiene dos materiais?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Usamos materiais individuais em cada atendimento, com protocolos rigorosos de limpeza em todos os ambientes." }
+    },
+    {
+      "@type": "Question",
+      "name": "Como me preparo para a depilação a cera?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Os pelos devem ter cerca de 0,5 cm e é bom evitar esfoliar a pele no dia. A frequência costuma ser a cada 3 a 5 semanas." }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto custam os serviços?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A tabela de valores sempre atualizada está na nossa página do Trinks. Se preferir, tire dúvidas de valores direto pelo WhatsApp (83) 98669-7088." }
+    },
+    {
+      "@type": "Question",
+      "name": "O espaço é acessível para pessoas com deficiência?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sim. O estúdio tem acesso para pessoas com deficiência e também oferece Wi-Fi grátis." }
+    }
+  ]
+}
+</script>
 </head>
 <body class="has-mobile-bar">
 
@@ -85,13 +129,16 @@
 <section class="section section-flush">
   <div class="section-inner">
     <div class="srv-square-grid">
+      <!-- data-price: preencha com o valor real de cada serviço (ex.: "A partir de R$ 35").
+           Vazio = o modal mostra apenas o link da tabela do Trinks. Não invente valores. -->
 
       <button type="button" class="srv-square" id="cera" data-service
+        data-price="A partir de R$ 12"
         data-title="Depilação a cera"
         data-chip="Depilação"
         data-img="assets/ambiente-sala-cera.jpg"
         data-summary="Técnica especializada para todas as áreas do corpo, com foco em conforto e resultado duradouro."
-        data-facts='[["Indicado para","quem busca pele lisa com intervalo maior entre sessões"],["Duração","cerca de 30 a 60 minutos, conforme a área"],["Preparo","pelos com cerca de 0,5 cm; evite esfoliar no dia"],["Frequência","em geral a cada 3–5 semanas"],["Atenção","pele irritada, feridas ou alergia a cera — avise a equipe"]]'
+        data-facts='[["Indicado para","quem busca pele lisa com intervalo maior entre sessões"],["Duração","cerca de 30 a 60 minutos, conforme a área"],["Valores (fem.)","a partir de R$ 12 · buço R$ 20 · pubiana R$ 48 · perna completa R$ 65 · combos com desconto"],["Valores (masc.)","a partir de R$ 20 · bigode R$ 20 · tórax R$ 33 · nádegas R$ 33 — tabela completa no Trinks"],["Preparo","pelos com cerca de 0,5 cm; evite esfoliar no dia"],["Frequência","em geral a cada 3–5 semanas"],["Atenção","pele irritada, feridas ou alergia a cera — avise a equipe"]]'
         data-wa="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20depilação%20a%20cera"
         data-cta="Agendar depilação"
         aria-label="Ver detalhes de Depilação a cera">
@@ -101,15 +148,17 @@
         <span class="srv-square-label">
           <span class="srv-chip">Depilação</span>
           <span class="srv-square-title">Depilação a cera</span>
+          <span class="srv-square-price">A partir de R$ 12</span>
         </span>
       </button>
 
       <button type="button" class="srv-square" id="fotodepilacao" data-service
+        data-price=""
         data-title="Fotodepilação"
         data-chip="Depilação"
         data-img="assets/ambiente-sala-multiuso.jpg"
         data-summary="Luz pulsada para redução progressiva dos pelos, com conforto e protocolo seguro."
-        data-facts='[["Indicado para","quem deseja menos manutenção ao longo do tempo"],["Duração","por sessão, conforme área e protocolo"],["Preparo","evite sol intenso e siga as orientações da avaliação"],["Frequência","sessões espaçadas conforme resposta da pele"],["Atenção","avaliação prévia é essencial"]]'
+        data-facts='[["Indicado para","quem deseja menos manutenção ao longo do tempo"],["Duração","por sessão, conforme área e protocolo"],["Valores","sob consulta — a avaliação prévia define o protocolo e o orçamento; fale no WhatsApp"],["Preparo","evite sol intenso e siga as orientações da avaliação"],["Frequência","sessões espaçadas conforme resposta da pele"],["Atenção","avaliação prévia é essencial"]]'
         data-wa="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20fotodepilação"
         data-cta="Agendar fotodepilação"
         aria-label="Ver detalhes de Fotodepilação">
@@ -123,11 +172,12 @@
       </button>
 
       <button type="button" class="srv-square" id="sobrancelhas" data-service
+        data-price="A partir de R$ 35"
         data-title="Design de sobrancelhas"
         data-chip="Olhar"
         data-img="assets/sobrancelha.jpg"
         data-summary="Harmonia do rosto com técnicas que respeitam sua identidade e expressão natural."
-        data-facts='[["Indicado para","quem quer sobrancelhas definidas e naturais"],["Duração","cerca de 40 minutos"],["Preparo","não é necessário; traga referências se quiser"],["Frequência","em geral a cada 2–4 semanas"],["Pós","evite sol e esfoliação forte na região no mesmo dia"]]'
+        data-facts='[["Indicado para","quem quer sobrancelhas definidas e naturais"],["Duração","cerca de 40 minutos"],["Valores","design R$ 35 · design + buço + queixo R$ 75 · brow lamination R$ 90 — tabela completa no Trinks"],["Preparo","não é necessário; traga referências se quiser"],["Frequência","em geral a cada 2–4 semanas"],["Pós","evite sol e esfoliação forte na região no mesmo dia"]]'
         data-wa="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20design%20de%20sobrancelhas"
         data-cta="Agendar sobrancelhas"
         aria-label="Ver detalhes de Design de sobrancelhas">
@@ -137,15 +187,17 @@
         <span class="srv-square-label">
           <span class="srv-chip">Olhar</span>
           <span class="srv-square-title">Sobrancelhas</span>
+          <span class="srv-square-price">A partir de R$ 35</span>
         </span>
       </button>
 
       <button type="button" class="srv-square" id="cilios" data-service
+        data-price="Aplicação a partir de R$ 90"
         data-title="Cílios"
         data-chip="Olhar"
         data-img="assets/ambiente-cilios.jpg"
         data-summary="Extensão e tratamentos para um olhar mais expressivo, com acabamento profissional."
-        data-facts='[["Indicado para","quem deseja volume e definição no olhar"],["Duração","cerca de 90 minutos (varia com o volume)"],["Preparo","venha com os olhos limpos, sem máscara"],["Frequência","manutenção conforme crescimento natural"],["Pós","evite molhar nas primeiras horas"]]'
+        data-facts='[["Indicado para","quem deseja volume e definição no olhar"],["Duração","de 2h a 3h, conforme a técnica"],["Valores","permanente R$ 90 · volume brasileiro R$ 100 · fox eyes R$ 120 · manutenção R$ 75 · remoção R$ 45 — tabela completa no Trinks"],["Preparo","venha com os olhos limpos, sem máscara"],["Frequência","manutenção conforme crescimento natural"],["Pós","evite molhar nas primeiras horas"]]'
         data-wa="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20cílios"
         data-cta="Agendar cílios"
         aria-label="Ver detalhes de Cílios">
@@ -155,15 +207,17 @@
         <span class="srv-square-label">
           <span class="srv-chip">Olhar</span>
           <span class="srv-square-title">Cílios</span>
+          <span class="srv-square-price">A partir de R$ 90</span>
         </span>
       </button>
 
       <button type="button" class="srv-square" id="facial" data-service
+        data-price="A partir de R$ 70"
         data-title="Estética facial"
         data-chip="Pele"
         data-img="assets/ambiente-recepcao.jpg"
-        data-summary="Tratamentos personalizados para revitalizar, hidratar e cuidar da saúde da pele."
-        data-facts='[["Indicado para","hidratação, revitalização e rotina de cuidado da face"],["Duração","cerca de 60 minutos"],["Preparo","pele limpa; informe produtos e tratamentos em uso"],["Frequência","conforme o protocolo indicado na avaliação"],["Pós","use protetor solar e evite exposição intensa no mesmo dia"]]'
+        data-summary="Limpeza de pele, peeling e tratamento de melasma — protocolos personalizados para revitalizar e cuidar da saúde da pele."
+        data-facts='[["Indicado para","hidratação, cravos e oleosidade, manchas, melasma e cicatrizes de acne"],["Duração","de 1h a 2h, conforme o protocolo"],["Valores","limpeza de pele R$ 70 · limpeza master R$ 120 · peeling de diamante R$ 130 · melasma a partir de R$ 100 — tabela completa no Trinks"],["Preparo","pele limpa; informe produtos e tratamentos em uso"],["Frequência","conforme o protocolo indicado na avaliação"],["Pós","use protetor solar e evite exposição intensa no mesmo dia"]]'
         data-wa="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20estética%20facial"
         data-cta="Agendar estética facial"
         aria-label="Ver detalhes de Estética facial">
@@ -173,15 +227,17 @@
         <span class="srv-square-label">
           <span class="srv-chip">Pele</span>
           <span class="srv-square-title">Estética facial</span>
+          <span class="srv-square-price">A partir de R$ 70</span>
         </span>
       </button>
 
       <button type="button" class="srv-square" id="corporal" data-service
+        data-price="Avaliação grátis · a partir de R$ 15"
         data-title="Estética corporal"
         data-chip="Estética"
         data-img="assets/ambiente-sala-multiuso.jpg"
-        data-summary="Procedimentos com foco em bem-estar, autoestima e cuidado integral do corpo."
-        data-facts='[["Indicado para","quem busca bem-estar e protocolos personalizados"],["Duração","sob consulta, conforme o procedimento"],["Preparo","orientação individual na avaliação"],["Frequência","de acordo com o objetivo e o plano de tratamento"],["Atenção","contraindicações são avaliadas presencialmente"]]'
+        data-summary="Drenagem, massagens, esfoliação, banho de lua e clareamento — com foco em bem-estar, autoestima e cuidado integral."
+        data-facts='[["Avaliação","gratuita — primeiro passo para definir o protocolo ideal para você"],["Duração","de 30 minutos a 2h, conforme o procedimento"],["Valores","esfoliação a partir de R$ 15 · banho de lua R$ 45–55 · clareamento R$ 60 · drenagem R$ 90 · massagem relaxante ou modeladora R$ 100 — tabela completa no Trinks"],["Frequência","de acordo com o objetivo e o plano de tratamento"],["Atenção","contraindicações são avaliadas presencialmente"]]'
         data-wa="https://wa.me/5583986697088?text=Ol%C3%A1!%20Quero%20agendar%20estética%20corporal"
         data-cta="Agendar estética corporal"
         aria-label="Ver detalhes de Estética corporal">
@@ -191,9 +247,51 @@
         <span class="srv-square-label">
           <span class="srv-chip">Estética</span>
           <span class="srv-square-title">Estética corporal</span>
+          <span class="srv-square-price">Avaliação grátis</span>
         </span>
       </button>
 
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="section faq" id="faq" aria-labelledby="faq-title">
+  <div class="section-inner">
+    <div class="section-header center">
+      <span class="section-tag">Dúvidas frequentes</span>
+      <h2 class="section-title" id="faq-title">Perguntas que sempre chegam</h2>
+      <p class="section-sub">Respostas rápidas antes de você agendar. Não achou a sua? Chama no WhatsApp.</p>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Preciso agendar ou posso chegar sem hora marcada?</summary>
+        <p>Recomendamos agendar pelo <a href="https://www.trinks.com/dpylarcg" target="_blank" rel="noopener">Trinks</a> ou pelo <a href="https://wa.me/5583986697088" target="_blank" rel="noopener">WhatsApp</a> para garantir seu horário com a profissional de sua preferência.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Qual o horário de funcionamento?</summary>
+        <p>Terça a sexta, das 9h às 19h. Sábado, das 9h às 18h.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Vocês atendem homens e crianças?</summary>
+        <p>Sim. Atendemos público feminino e masculino, adultos e crianças.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Como funciona a higiene dos materiais?</summary>
+        <p>Usamos materiais individuais em cada atendimento, com protocolos rigorosos de limpeza em todos os ambientes.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Como me preparo para a depilação a cera?</summary>
+        <p>Os pelos devem ter cerca de 0,5 cm e é bom evitar esfoliar a pele no dia. A frequência costuma ser a cada 3 a 5 semanas.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Quanto custam os serviços?</summary>
+        <p>A tabela de valores sempre atualizada está na nossa <a href="https://www.trinks.com/dpylarcg" target="_blank" rel="noopener">página do Trinks</a>. Se preferir, tire dúvidas de valores direto pelo <a href="https://wa.me/5583986697088" target="_blank" rel="noopener">WhatsApp</a>.</p>
+      </details>
+      <details class="faq-item">
+        <summary>O espaço é acessível para pessoas com deficiência?</summary>
+        <p>Sim. O estúdio tem acesso para pessoas com deficiência e também oferece Wi-Fi grátis.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -269,11 +367,15 @@
       <img id="srvModalImg" src="" alt="">
     </div>
     <div class="srv-modal-body">
-      <span class="srv-chip" id="srvModalChip"></span>
+      <div class="srv-modal-meta">
+        <span class="srv-chip" id="srvModalChip"></span>
+        <span class="srv-price" id="srvModalPrice" hidden></span>
+      </div>
       <h2 id="srvModalTitle"></h2>
       <p id="srvModalSummary"></p>
       <ul class="srv-facts" id="srvModalFacts"></ul>
       <a id="srvModalCta" class="btn btn-mint" href="#" target="_blank" rel="noopener">Agendar</a>
+      <a class="srv-modal-prices-link" href="https://www.trinks.com/dpylarcg" target="_blank" rel="noopener">Ver preços e pacotes no Trinks →</a>
     </div>
   </div>
 </div>

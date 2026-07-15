@@ -11,7 +11,8 @@
 <meta property="og:title" content="Equipe | D'Pylar — Campina Grande">
 <meta property="og:description" content="A equipe que cuida de você: técnica, higiene e acolhimento desde 2016.">
 <meta property="og:image" content="https://dpylar.vercel.app/assets/logo.png">
-<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -95,7 +96,10 @@
 
           <div class="founder-frame tf-frame" id="tfMain">
             <button type="button" class="tf-photo" id="tfPhotoBtn" aria-label="Ampliar foto da profissional">
-              <img id="tfImg" class="team-portrait" src="assets/team-rosina.jpg" width="640" height="800" alt="Rosina Helena" fetchpriority="high">
+              <span class="tf-slide-track" id="tfSlideTrack">
+                <img id="tfImg" class="team-portrait is-active" src="assets/team-rosina.jpg" width="640" height="800" alt="Rosina Helena" fetchpriority="high">
+                <img id="tfImgNext" class="team-portrait" src="assets/team-rosina.jpg" width="640" height="800" alt="" aria-hidden="true">
+              </span>
               <span class="tf-expand" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
               </span>
