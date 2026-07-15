@@ -6,6 +6,13 @@
 <title id="pageTitle">Nosso Local | D'Pylar — Campina Grande</title>
 <meta name="description" content="Ambientes da D'Pylar em Campina Grande: recepção, salas de atendimento e estrutura pensada para o seu conforto.">
 <link rel="canonical" href="https://dpylar.vercel.app/ambiente.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Nosso Local | D'Pylar — Campina Grande">
+<meta property="og:description" content="Conheça os ambientes da D'Pylar, preparados para receber você com conforto e cuidado.">
+<meta property="og:image" content="https://dpylar.vercel.app/assets/logo.png">
+<meta property="og:url" content="https://dpylar.vercel.app/ambiente.html">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +21,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="has-mobile-bar">
+<a href="#main-content" class="skip-link">Pular para o conteúdo</a>
 
 <!-- ══ NAV ══ -->
 <nav class="nav" id="navbar">
@@ -87,10 +95,11 @@
 </div>
 
 <!-- ══ PAGE HERO (preenchido via JS) ══ -->
+<main id="main-content">
 <section class="page-hero">
   <span class="section-tag" id="envTag">Nosso Local</span>
-  <h1 id="envHeroTitle">Ambiente</h1>
-  <p id="envHeroP"></p>
+  <h1 id="envHeroTitle">Recepção</h1>
+  <p id="envHeroP">O primeiro contato com a D'Pylar, pensado para te receber com leveza, conforto e aquele cheirinho gostoso que já deixa você à vontade.</p>
 </section>
 
 <!-- ══ DETALHE DO AMBIENTE (preenchido via JS) ══ -->
@@ -103,12 +112,32 @@
     <div class="env-detail-layout">
       <div class="env-detail-visual">
         <div class="env-detail-frame" id="envFrame">
-          <img id="envImg" src="" alt="">
+          <img id="envImg" src="assets/ambiente-recepcao.jpg" alt="Recepção D'Pylar">
         </div>
       </div>
       <div class="env-detail-text">
-        <div id="envBody"></div>
-        <div class="about-perks" id="envPerks"></div>
+        <div id="envBody">
+          <p>Assim que você chega, é recebida com atenção pela nossa equipe, num espaço decorado em tons claros de verde e madeira que já trazem aquela sensação de calma.</p>
+          <p>Enquanto aguarda, você pode relaxar no sofá, se conectar ao Wi-Fi gratuito e aproveitar uma água ou um café antes do seu horário começar.</p>
+        </div>
+        <div class="about-perks" id="envPerks">
+          <div class="perk">
+            <div class="perk-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Ambiente climatizado</span>
+          </div>
+          <div class="perk">
+            <div class="perk-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Wi-Fi grátis</span>
+          </div>
+          <div class="perk">
+            <div class="perk-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Água e café à vontade</span>
+          </div>
+          <div class="perk">
+            <div class="perk-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Acessível para pessoas com deficiência</span>
+          </div>
+        </div>
         <div class="env-detail-actions">
           <a href="https://wa.me/5583986697088" class="btn btn-whatsapp" target="_blank">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -152,6 +181,7 @@
   </div>
 </section>
 
+</main>
 <!-- ══ FOOTER ══ -->
 <footer class="footer">
   <div class="footer-inner">
@@ -219,7 +249,7 @@
         "Assim que você chega, é recebida com atenção pela nossa equipe, num espaço decorado em tons claros de verde e madeira que já trazem aquela sensação de calma.",
         "Enquanto aguarda, você pode relaxar no sofá, se conectar ao Wi-Fi gratuito e aproveitar uma água ou um café antes do seu horário começar."
       ],
-      perks: ["Ambiente climatizado", "Wi-Fi grátis", "Água e café à vontade", "Acesso para deficientes"],
+      perks: ["Ambiente climatizado", "Wi-Fi grátis", "Água e café à vontade", "Acessível para pessoas com deficiência"],
       relatedHref: null, relatedLabel: null
     },
     "sala-cera": {
@@ -227,9 +257,9 @@
       heroP: "Um ambiente reservado e climatizado, preparado para que a sua depilação a cera seja tranquila do início ao fim.",
       body: [
         "A sala foi pensada para garantir privacidade e conforto: maca própria, iluminação suave e temperatura agradável durante todo o atendimento.",
-        "Todo o material utilizado é individual e esterilizado, seguindo rigorosos protocolos de higiene para a sua segurança."
+        "Todo o material utilizado é individual e segue rigorosos protocolos de higiene para a sua segurança."
       ],
-      perks: ["Maca confortável", "Material esterilizado", "Ambiente privativo", "Higiene rigorosa"],
+      perks: ["Maca confortável", "Materiais individuais", "Ambiente privativo", "Higiene rigorosa"],
       relatedHref: "servicos.html#cera", relatedLabel: "Ver serviço de Depilação a Cera"
     },
     "sala-multiuso": {
@@ -239,7 +269,7 @@
         "Para aproveitar bem cada metro do estúdio, esta sala foi equipada para receber dois cuidados diferentes: a tecnologia de luz pulsada da fotodepilação e a maca dos tratamentos faciais e corporais.",
         "Independente do procedimento marcado, o padrão é sempre o mesmo: ambiente climatizado, produtos e materiais individuais, e toda a atenção da equipe do início ao fim."
       ],
-      perks: ["Tecnologia de luz pulsada", "Maca para estética facial e corporal", "Ambiente climatizado e privativo", "Materiais individuais e esterilizados"],
+      perks: ["Tecnologia de luz pulsada", "Maca para estética facial e corporal", "Ambiente climatizado e privativo", "Materiais individuais e higienizados"],
       relatedLinks: [
         { href: "servicos.html#fotodepilacao", label: "Ver serviço de Fotodepilação" },
         { href: "servicos.html#facial", label: "Ver serviços de Estética" }
@@ -252,7 +282,7 @@
         "Nesta sala é feito todo o trabalho de design de sobrancelhas, com técnicas que valorizam o seu formato natural e realçam a expressão do olhar.",
         "A iluminação foi planejada especialmente para garantir precisão em cada fio, com uma cadeira confortável para você relaxar durante o atendimento."
       ],
-      perks: ["Iluminação de precisão", "Cadeira reclinável", "Instrumentos esterilizados", "Atendimento individualizado"],
+      perks: ["Iluminação de precisão", "Cadeira reclinável", "Instrumentos higienizados", "Atendimento individualizado"],
       relatedHref: "servicos.html#sobrancelhas", relatedLabel: "Ver serviço de Sobrancelhas"
     },
     "sala-cilios": {
@@ -282,7 +312,7 @@
         "Mantemos o banheiro sempre limpo e higienizado, com produtos de qualidade disponíveis para uso das clientes durante o atendimento.",
         "O espaço conta com estrutura de acessibilidade, para que todas as clientes se sintam à vontade em nosso estúdio."
       ],
-      perks: ["Higienização constante", "Acesso para deficientes", "Produtos de higiene disponíveis", "Ambiente reservado"],
+      perks: ["Higienização constante", "Acessível para pessoas com deficiência", "Produtos de higiene disponíveis", "Ambiente reservado"],
       relatedHref: null, relatedLabel: null
     }
   };
