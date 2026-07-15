@@ -1,3 +1,33 @@
+function focusableElements(container) {
+  return Array.from(container.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )).filter((element) => {
+    if (element.hidden || element.getAttribute('aria-hidden') === 'true' || element.matches(':disabled')) {
+      return false;
+    }
+    const styles = window.getComputedStyle(element);
+    return element.getClientRects().length > 0
+      && styles.display !== 'none'
+      && styles.visibility !== 'hidden'
+      && styles.visibility !== 'collapse';
+  });
+}
+
+function trapDialogFocus(event, dialog) {
+  if (event.key !== 'Tab') return;
+  const items = focusableElements(dialog);
+  if (!items.length) return;
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  } else if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  }
+}
+
 // Mark JS available for progressive enhancement
 document.documentElement.classList.add('js-ready');
 
@@ -263,7 +293,6 @@ if (featured) {
     const d = document.createElement('button');
     d.type = 'button';
     d.className = 'tf-dot';
-    d.setAttribute('role', 'tab');
     d.setAttribute('aria-label', 'Ver ' + p.name);
     d.addEventListener('click', () => go(i));
     if (dots) dots.appendChild(d);
@@ -344,7 +373,6 @@ if (featured) {
     dotEls.forEach((d, i) => {
       const on = i === idx;
       d.classList.toggle('active', on);
-      d.setAttribute('aria-selected', on ? 'true' : 'false');
     });
   }
 
@@ -518,13 +546,12 @@ if (featured) {
       }
       lightbox.removeAttribute('hidden');
       lightbox.hidden = false;
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
       if (lightboxPanel) {
         lightboxPanel.classList.remove('is-swapping');
         lightboxPanel.classList.add('is-entering');
       }
-      requestAnimationFrame(() => {
-        lightbox.classList.add('open');
-      });
       document.body.classList.add('lightbox-open');
       const cb = document.getElementById('lightboxClose');
       if (cb) cb.focus();
@@ -532,6 +559,7 @@ if (featured) {
     const close = () => {
       lightbox.classList.remove('open');
       if (lightboxPanel) lightboxPanel.classList.remove('is-entering', 'is-swapping');
+      lightbox.setAttribute('aria-hidden', 'true');
       lightbox.hidden = true;
       lightbox.setAttribute('hidden', '');
       document.body.classList.remove('lightbox-open');
@@ -551,6 +579,7 @@ if (featured) {
     });
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('open')) return;
+      trapDialogFocus(e, lightbox);
       if (e.key === 'Escape') close();
       if (e.key === 'ArrowRight') go(idx + 1);
       if (e.key === 'ArrowLeft') go(idx - 1);
@@ -697,6 +726,7 @@ document.addEventListener('keydown', handleMobileMenuKeydown);
 
     modal.hidden = false;
     modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('srv-modal-open');
     const closeBtn = modal.querySelector('.srv-modal-close');
     if (closeBtn) closeBtn.focus();
@@ -704,6 +734,7 @@ document.addEventListener('keydown', handleMobileMenuKeydown);
 
   function closeService() {
     modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
     modal.hidden = true;
     document.body.classList.remove('srv-modal-open');
     if (imgEl) imgEl.src = '';
@@ -718,9 +749,10 @@ document.addEventListener('keydown', handleMobileMenuKeydown);
     el.addEventListener('click', closeService);
   });
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', (event) => {
     if (!modal.classList.contains('open')) return;
-    if (e.key === 'Escape') closeService();
+    trapDialogFocus(event, modal);
+    if (event.key === 'Escape') closeService();
   });
 
   // Deep-link: #cera, #cilios, etc.

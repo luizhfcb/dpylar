@@ -1881,7 +1881,14 @@ body.srv-modal-open { overflow: hidden; }
 .local-carousel-section.is-ready:hover .local-carousel-track {
   animation-play-state: paused;
 }
+.local-carousel-section:focus-within .local-carousel-track,
+body.lightbox-open .local-carousel-section .local-carousel-track {
+  animation-play-state: paused;
+}
 .local-slide {
+  padding: 0;
+  font: inherit;
+  appearance: none;
   position: relative;
   flex: 0 0 240px;
   width: 240px;

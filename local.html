@@ -110,21 +110,21 @@
   <div class="local-carousel-wrap">
     <div class="local-carousel-track" id="localTrack">
       <!-- eager: lazy + animação às vezes deixava só o fundo verde -->
-      <div class="local-slide"><img src="assets/ambiente-recepcao.jpg" width="240" height="300" decoding="async" alt="Recepção D'Pylar"></div>
-      <div class="local-slide"><img src="assets/ambiente-sala-cera.jpg" width="240" height="300" decoding="async" alt="Sala de Depilação a Cera"></div>
-      <div class="local-slide"><img src="assets/ambiente-sala-multiuso.jpg" width="240" height="300" decoding="async" alt="Sala de Fotodepilação e Estética"></div>
-      <div class="local-slide"><img src="assets/ambiente-sobrancelha.jpg" width="240" height="300" decoding="async" alt="Sala de Sobrancelhas"></div>
-      <div class="local-slide"><img src="assets/ambiente-cilios.jpg" width="240" height="300" decoding="async" alt="Sala de Cílios"></div>
-      <div class="local-slide"><img src="assets/ambiente-copa.jpg" width="240" height="300" decoding="async" alt="Copa e Área de Espera"></div>
-      <div class="local-slide"><img src="assets/ambiente-banheiro.jpg" width="240" height="300" decoding="async" alt="Banheiro D'Pylar"></div>
+      <button type="button" class="local-slide" aria-label="Ampliar Recepção D'Pylar"><img src="assets/ambiente-recepcao.jpg" width="240" height="300" decoding="async" alt="Recepção D'Pylar"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Sala de Depilação a Cera"><img src="assets/ambiente-sala-cera.jpg" width="240" height="300" decoding="async" alt="Sala de Depilação a Cera"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Sala de Fotodepilação e Estética"><img src="assets/ambiente-sala-multiuso.jpg" width="240" height="300" decoding="async" alt="Sala de Fotodepilação e Estética"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Sala de Sobrancelhas"><img src="assets/ambiente-sobrancelha.jpg" width="240" height="300" decoding="async" alt="Sala de Sobrancelhas"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Sala de Cílios"><img src="assets/ambiente-cilios.jpg" width="240" height="300" decoding="async" alt="Sala de Cílios"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Copa e Área de Espera"><img src="assets/ambiente-copa.jpg" width="240" height="300" decoding="async" alt="Copa e Área de Espera"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Banheiro D'Pylar"><img src="assets/ambiente-banheiro.jpg" width="240" height="300" decoding="async" alt="Banheiro D'Pylar"></button>
       <!-- duplicado para o loop contínuo -->
-      <div class="local-slide"><img src="assets/ambiente-recepcao.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></div>
-      <div class="local-slide"><img src="assets/ambiente-sala-cera.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></div>
-      <div class="local-slide"><img src="assets/ambiente-sala-multiuso.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></div>
-      <div class="local-slide"><img src="assets/ambiente-sobrancelha.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></div>
-      <div class="local-slide"><img src="assets/ambiente-cilios.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></div>
-      <div class="local-slide"><img src="assets/ambiente-copa.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></div>
-      <div class="local-slide"><img src="assets/ambiente-banheiro.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></div>
+      <button type="button" class="local-slide" aria-label="Ampliar Recepção D'Pylar"><img src="assets/ambiente-recepcao.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Sala de Depilação a Cera"><img src="assets/ambiente-sala-cera.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Sala de Fotodepilação e Estética"><img src="assets/ambiente-sala-multiuso.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Sala de Sobrancelhas"><img src="assets/ambiente-sobrancelha.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Sala de Cílios"><img src="assets/ambiente-cilios.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Copa e Área de Espera"><img src="assets/ambiente-copa.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></button>
+      <button type="button" class="local-slide" aria-label="Ampliar Banheiro D'Pylar"><img src="assets/ambiente-banheiro.jpg" width="240" height="300" decoding="async" alt="" aria-hidden="true"></button>
     </div>
   </div>
 </section>
@@ -392,15 +392,15 @@
 </footer>
 
 <!-- ══ LIGHTBOX ══ -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Imagem ampliada do ambiente" aria-hidden="true" hidden>
+  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Fechar">
     <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">
+  <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">
     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
   </button>
   <img id="lightboxImg" src="" alt="">
-  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Próximo">
+  <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Próximo">
     <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
   </button>
 </div>
@@ -438,37 +438,57 @@
       setTimeout(() => section.classList.add('is-ready'), 1200);
     }
 
+    const slides = Array.from(document.querySelectorAll('#localTrack .local-slide'));
     // pega só os 7 originais (ignora a duplicata do loop)
-    const items = Array.from(document.querySelectorAll('#localTrack .local-slide img')).slice(0, 7);
+    const items = slides.slice(0, 7).map((slide) => slide.querySelector('img'));
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
     let current = 0;
+    let lastLightboxFocus = null;
 
     function open(i) {
       current = i;
+      lastLightboxFocus = document.activeElement;
       lightboxImg.src = items[current].src;
       lightboxImg.alt = items[current].alt;
+      lightbox.hidden = false;
+      lightbox.removeAttribute('hidden');
       lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lightbox-open');
+      lightboxClose.focus();
     }
-    function close() { lightbox.classList.remove('open'); }
+    function close() {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightbox.hidden = true;
+      lightbox.setAttribute('hidden', '');
+      document.body.classList.remove('lightbox-open');
+      lightboxImg.src = '';
+      if (lastLightboxFocus && lastLightboxFocus.focus) lastLightboxFocus.focus();
+      lastLightboxFocus = null;
+    }
     function next(dir) {
       current = (current + dir + items.length) % items.length;
       lightboxImg.src = items[current].src;
       lightboxImg.alt = items[current].alt;
     }
 
-    document.querySelectorAll('#localTrack .local-slide img').forEach((img) => {
-      img.addEventListener('click', () => {
+    slides.forEach((slide) => {
+      slide.addEventListener('click', () => {
+        const img = slide.querySelector('img');
         const idx = items.indexOf(img) !== -1 ? items.indexOf(img) : items.findIndex(i => i.src === img.src);
         open(idx);
       });
     });
-    document.getElementById('lightboxClose').addEventListener('click', close);
+    lightboxClose.addEventListener('click', close);
     document.getElementById('lightboxPrev').addEventListener('click', () => next(-1));
     document.getElementById('lightboxNext').addEventListener('click', () => next(1));
     lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('open')) return;
+      trapDialogFocus(e, lightbox);
       if (e.key === 'Escape') close();
       if (e.key === 'ArrowRight') next(1);
       if (e.key === 'ArrowLeft') next(-1);

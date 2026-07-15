@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 
 const ROOT = path.resolve(__dirname, '..');
 const PAGES = {
@@ -204,6 +205,35 @@ function openingTags(html, tagName) {
   return html.match(new RegExp(`<${escapedTagName}\\b[^>]*>`, 'gi')) || [];
 }
 
+function namedFunctionSource(source, functionName) {
+  const match = new RegExp(`function\\s+${functionName}\\s*\\(`).exec(source);
+  assert.ok(match, `script deve declarar function ${functionName}`);
+  const openingBrace = source.indexOf('{', match.index);
+  const closingBrace = matchingBrace(source, openingBrace);
+  return source.slice(match.index, closingBrace + 1);
+}
+
+function assignedArrowSource(source, variableName, afterMarker) {
+  const markerIndex = source.indexOf(afterMarker);
+  assert.notEqual(markerIndex, -1, `script deve conter ${afterMarker}`);
+  const match = new RegExp(`const\\s+${variableName}\\s*=\\s*\\(\\)\\s*=>\\s*\\{`)
+    .exec(source.slice(markerIndex));
+  assert.ok(match, `script deve declarar const ${variableName} após ${afterMarker}`);
+  const declarationStart = markerIndex + match.index;
+  const openingBrace = source.indexOf('{', declarationStart);
+  const closingBrace = matchingBrace(source, openingBrace);
+  return source.slice(declarationStart, closingBrace + 2);
+}
+
+function createClassList(initial = []) {
+  const values = new Set(initial);
+  return {
+    add: (...names) => names.forEach((name) => values.add(name)),
+    remove: (...names) => names.forEach((name) => values.delete(name)),
+    contains: (name) => values.has(name),
+  };
+}
+
 for (const [page, canonicalUrl] of Object.entries(PAGES)) {
   test(`${page}: estrutura principal e metadados sociais`, () => {
     const html = read(page);
@@ -339,4 +369,353 @@ test('style.css: skip link fica disponível ao receber foco', () => {
 
   assert.match(css, /\.skip-link\s*\{[^}]*position\s*:\s*fixed[^}]*transform\s*:\s*translateY\s*\(\s*-\s*[^)]+\)/is);
   assert.match(css, /\.skip-link:focus(?:-visible)?\s*\{[^}]*transform\s*:\s*translateY\s*\(\s*0\s*\)/is);
+});
+
+test('script.js: diálogos mantêm o foco do teclado dentro do modal', () => {
+  const script = read('script.js');
+
+  assert.match(script, /function trapDialogFocus\s*\(/);
+  assert.match(script, /trapDialogFocus\(event,\s*modal\)/);
+  assert.match(script, /trapDialogFocus\(e,\s*lightbox\)/);
+  assert.match(
+    read('servicos.html'),
+    /<div class="srv-modal" id="srvModal" role="dialog" aria-modal="true" aria-labelledby="srvModalTitle" aria-describedby="srvModalSummary" aria-hidden="true" hidden>/,
+  );
+});
+
+test('script.js: helper de foco exclui controles desabilitados ou não renderizados', () => {
+  const script = read('script.js');
+  const focusableSource = script.slice(0, script.indexOf('function trapDialogFocus'));
+  const candidate = (overrides = {}) => ({
+    hidden: false,
+    getAttribute: () => null,
+    matches: () => false,
+    getClientRects: () => [{}],
+    computedStyle: { display: 'inline', visibility: 'visible' },
+    ...overrides,
+  });
+  const enabled = candidate();
+  const disabled = candidate({ matches: (selector) => selector === ':disabled' });
+  const ariaHidden = candidate({ getAttribute: (name) => (name === 'aria-hidden' ? 'true' : null) });
+  const noClientRects = candidate({ getClientRects: () => [] });
+  const displayNone = candidate({ computedStyle: { display: 'none', visibility: 'visible' } });
+  const visibilityHidden = candidate({ computedStyle: { display: 'inline', visibility: 'hidden' } });
+  const sandbox = {
+    container: {
+      querySelectorAll: () => [
+        enabled,
+        disabled,
+        ariaHidden,
+        noClientRects,
+        displayNone,
+        visibilityHidden,
+      ],
+    },
+    window: { getComputedStyle: (element) => element.computedStyle },
+  };
+
+  vm.runInNewContext(`${focusableSource}\nresult = focusableElements(container);`, sandbox);
+
+  assert.deepEqual(Array.from(sandbox.result), [enabled]);
+});
+
+test('script.js: trap circula Tab e Shift+Tab sem interceptar outras teclas', () => {
+  const script = read('script.js');
+  const helpersSource = script.slice(0, script.indexOf('// Mark JS available'));
+  let documentStub;
+  const focusable = () => ({
+    hidden: false,
+    getAttribute: () => null,
+    matches: () => false,
+    getClientRects: () => [{}],
+    focus() { documentStub.activeElement = this; },
+  });
+  const first = focusable();
+  const middle = focusable();
+  const last = focusable();
+  const dialog = { querySelectorAll: () => [first, middle, last] };
+  documentStub = { activeElement: last };
+  const sandbox = vm.createContext({
+    document: documentStub,
+    window: { getComputedStyle: () => ({ display: 'block', visibility: 'visible' }) },
+  });
+  vm.runInContext(helpersSource, sandbox);
+  const dispatch = (key, shiftKey = false) => {
+    const event = {
+      key,
+      shiftKey,
+      prevented: 0,
+      preventDefault() { this.prevented += 1; },
+    };
+    sandbox.event = event;
+    sandbox.dialog = dialog;
+    vm.runInContext('trapDialogFocus(event, dialog)', sandbox);
+    return event;
+  };
+
+  const forward = dispatch('Tab');
+  assert.equal(documentStub.activeElement, first);
+  assert.equal(forward.prevented, 1);
+
+  const backward = dispatch('Tab', true);
+  assert.equal(documentStub.activeElement, last);
+  assert.equal(backward.prevented, 1);
+
+  const escape = dispatch('Escape');
+  assert.equal(documentStub.activeElement, last);
+  assert.equal(escape.prevented, 0);
+});
+
+test('local.html: lightbox executa abertura, Escape, backdrop e restauração de foco', () => {
+  const html = read('local.html');
+  const inlineScript = Array.from(html.matchAll(/<script>([\s\S]*?)<\/script>/g))
+    .map((match) => match[1])
+    .find((source) => source.includes('Carrossel local'));
+  assert.ok(inlineScript, 'local.html deve manter o script local do carrossel');
+
+  let documentStub;
+  const node = (overrides = {}) => {
+    const listeners = {};
+    const attributes = {};
+    return {
+      listeners,
+      attributes,
+      hidden: false,
+      classList: createClassList(),
+      addEventListener(type, listener) { listeners[type] = listener; },
+      getAttribute(name) { return attributes[name] ?? null; },
+      setAttribute(name, value) {
+        attributes[name] = value;
+        if (name === 'hidden') this.hidden = true;
+      },
+      removeAttribute(name) {
+        delete attributes[name];
+        if (name === 'hidden') this.hidden = false;
+      },
+      matches: () => false,
+      getClientRects: () => [{}],
+      focus() { documentStub.activeElement = this; },
+      ...overrides,
+    };
+  };
+  const images = Array.from({ length: 14 }, (_, index) => node({
+    complete: true,
+    src: `ambiente-${index % 7}.jpg`,
+    alt: `Ambiente ${index % 7}`,
+  }));
+  const slides = images.map((image) => node({ querySelector: () => image }));
+  const section = node();
+  const track = node({ querySelectorAll: () => images });
+  const lightboxImg = node({ src: '', alt: '' });
+  const closeButton = node();
+  const previousButton = node();
+  const nextButton = node();
+  const lightbox = node({
+    hidden: true,
+    querySelectorAll: () => [closeButton, previousButton, nextButton],
+  });
+  lightbox.setAttribute('aria-hidden', 'true');
+  const body = { classList: createClassList() };
+  const documentListeners = {};
+  const byId = {
+    localTrack: track,
+    lightbox,
+    lightboxImg,
+    lightboxClose: closeButton,
+    lightboxPrev: previousButton,
+    lightboxNext: nextButton,
+  };
+  documentStub = {
+    activeElement: slides[0],
+    body,
+    querySelector: (selector) => (selector === '.local-carousel-section' ? section : null),
+    querySelectorAll: (selector) => (selector === '#localTrack .local-slide' ? slides : []),
+    getElementById: (id) => byId[id] || null,
+    addEventListener: (type, listener) => { documentListeners[type] = listener; },
+  };
+  const helpersSource = read('script.js').slice(0, read('script.js').indexOf('// Mark JS available'));
+  const context = vm.createContext({
+    document: documentStub,
+    window: { getComputedStyle: () => ({ display: 'block', visibility: 'visible' }) },
+    setTimeout: (callback) => callback(),
+  });
+  vm.runInContext(`${helpersSource}\n${inlineScript}`, context);
+
+  slides[0].listeners.click();
+  assert.equal(lightbox.hidden, false);
+  assert.equal(lightbox.classList.contains('open'), true);
+  assert.equal(lightbox.getAttribute('aria-hidden'), 'false');
+  assert.equal(body.classList.contains('lightbox-open'), true);
+  assert.equal(documentStub.activeElement, closeButton);
+  assert.equal(lightboxImg.src, images[0].src);
+
+  documentListeners.keydown({ key: 'Escape', shiftKey: false, preventDefault() {} });
+  assert.equal(lightbox.hidden, true);
+  assert.equal(lightbox.classList.contains('open'), false);
+  assert.equal(lightbox.getAttribute('aria-hidden'), 'true');
+  assert.equal(body.classList.contains('lightbox-open'), false);
+  assert.equal(documentStub.activeElement, slides[0]);
+
+  slides[0].listeners.click();
+  lightbox.listeners.click({ target: lightbox });
+  assert.equal(lightbox.hidden, true);
+  assert.equal(body.classList.contains('lightbox-open'), false);
+  assert.equal(documentStub.activeElement, slides[0]);
+});
+
+test('script.js: Serviços e Equipe executam estados de abertura e fechamento dos modais', () => {
+  const script = read('script.js');
+  let activeElement;
+  let currentModal;
+  const focusVisibility = [];
+  const opener = { focus: () => { activeElement = opener; } };
+  const closeButton = {
+    focus: () => {
+      focusVisibility.push(
+        !currentModal.hidden
+          && currentModal.classList.contains('open')
+          && currentModal.getAttribute('aria-hidden') === 'false',
+      );
+      activeElement = closeButton;
+    },
+  };
+  const body = { classList: createClassList() };
+  const documentStub = {
+    get activeElement() { return activeElement; },
+    set activeElement(value) { activeElement = value; },
+    body,
+    getElementById: (id) => (id === 'lightboxClose' ? closeButton : null),
+  };
+
+  const serviceAttributes = { 'aria-hidden': 'true' };
+  const serviceModal = {
+    hidden: true,
+    classList: createClassList(),
+    querySelector: () => closeButton,
+    getAttribute: (name) => serviceAttributes[name] ?? null,
+    setAttribute: (name, value) => { serviceAttributes[name] = value; },
+  };
+  const card = {
+    getAttribute: (name) => (['data-facts', 'data-prices'].includes(name) ? '[]' : ''),
+  };
+  activeElement = opener;
+  const serviceContext = vm.createContext({
+    document: documentStub,
+    modal: serviceModal,
+    card,
+    lastFocus: null,
+    imgEl: null,
+    titleEl: null,
+    chipEl: null,
+    priceEl: null,
+    summaryEl: null,
+    pricesBlockEl: null,
+    pricesEl: null,
+    factsEl: null,
+    ctaEl: null,
+  });
+  currentModal = serviceModal;
+  vm.runInContext([
+    namedFunctionSource(script, 'openService'),
+    namedFunctionSource(script, 'closeService'),
+  ].join('\n'), serviceContext);
+  vm.runInContext('openService(card)', serviceContext);
+  assert.equal(serviceModal.hidden, false);
+  assert.equal(serviceModal.classList.contains('open'), true);
+  assert.equal(serviceModal.getAttribute('aria-hidden'), 'false');
+  assert.equal(body.classList.contains('srv-modal-open'), true);
+  assert.equal(activeElement, closeButton);
+  assert.equal(focusVisibility.at(-1), true);
+  vm.runInContext('closeService()', serviceContext);
+  assert.equal(serviceModal.hidden, true);
+  assert.equal(serviceModal.getAttribute('aria-hidden'), 'true');
+  assert.equal(body.classList.contains('srv-modal-open'), false);
+  assert.equal(activeElement, opener);
+
+  const teamAttributes = { 'aria-hidden': 'true' };
+  const teamModal = {
+    hidden: true,
+    classList: createClassList(),
+    removeAttribute: (name) => { if (name === 'hidden') teamModal.hidden = false; },
+    setAttribute: (name, value) => {
+      teamAttributes[name] = value;
+      if (name === 'hidden') teamModal.hidden = true;
+    },
+    getAttribute: (name) => teamAttributes[name] ?? null,
+  };
+  const teamImage = { src: '', alt: '' };
+  const animationFrames = [];
+  activeElement = opener;
+  currentModal = teamModal;
+  const marker = 'if (lightbox && lightboxImg && photoBtn)';
+  const teamContext = vm.createContext({
+    document: documentStub,
+    lightbox: teamModal,
+    lightboxImg: teamImage,
+    lightboxPanel: null,
+    lbTag: null,
+    lbName: null,
+    lbRole: null,
+    lbDesc: null,
+    lbCta: null,
+    roster: [{ full: 'full.jpg', img: 'thumb.jpg', name: 'Rosina', tag: '', role: '', desc: '' }],
+    idx: 0,
+    lastFocus: null,
+    WA_BASE: '',
+    requestAnimationFrame: (callback) => { animationFrames.push(callback); },
+  });
+  vm.runInContext([
+    assignedArrowSource(script, 'open', marker),
+    assignedArrowSource(script, 'close', marker),
+  ].join('\n'), teamContext);
+  vm.runInContext('open()', teamContext);
+  assert.equal(teamModal.hidden, false);
+  assert.equal(teamModal.classList.contains('open'), true);
+  assert.equal(teamModal.getAttribute('aria-hidden'), 'false');
+  assert.equal(body.classList.contains('lightbox-open'), true);
+  assert.equal(activeElement, closeButton);
+  assert.equal(focusVisibility.at(-1), true);
+  assert.equal(animationFrames.length, 0, 'abertura não deve depender de um frame futuro');
+  vm.runInContext('close()', teamContext);
+  assert.equal(teamModal.hidden, true);
+  assert.equal(teamModal.getAttribute('aria-hidden'), 'true');
+  assert.equal(body.classList.contains('lightbox-open'), false);
+  assert.equal(activeElement, opener);
+});
+
+test('style.css: carrossel Local pausa com foco ou lightbox aberto', () => {
+  const css = read('style.css');
+
+  assertRuleDeclaration(
+    css,
+    '.local-carousel-section:focus-within .local-carousel-track',
+    'animation-play-state',
+    /^paused$/i,
+  );
+  assertRuleDeclaration(
+    css,
+    'body.lightbox-open .local-carousel-section .local-carousel-track',
+    'animation-play-state',
+    /^paused$/i,
+  );
+});
+
+test('local.html: carrossel e lightbox são operáveis por teclado', () => {
+  const html = read('local.html');
+
+  assert.match(html, /<div class="lightbox" id="lightbox" role="dialog" aria-modal="true"[^>]*aria-hidden="true" hidden>/);
+  assert.equal((html.match(/<button type="button" class="local-slide"/g) || []).length, 14);
+  assert.match(html, /lastLightboxFocus/);
+  assert.match(html, /trapDialogFocus\(e,\s*lightbox\)/);
+});
+
+test('equipe.html: indicadores do carrossel não simulam abas', () => {
+  const html = read('equipe.html');
+
+  assert.doesNotMatch(html, /role="tablist"/);
+  assert.match(
+    html,
+    /<div class="lightbox team-lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxName" aria-describedby="lightboxDesc" aria-hidden="true" hidden>/,
+  );
+  assert.doesNotMatch(read('script.js'), /setAttribute\('role',\s*'tab'\)/);
 });
