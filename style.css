@@ -77,6 +77,25 @@ body.has-mobile-bar { padding-bottom: 72px; }
 
 img { max-width: 100%; height: auto; display: block; }
 
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 16px;
+  z-index: 2100;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #163C2C;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 :focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
@@ -249,7 +268,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .btn-ghost:hover { background: var(--mint-whisper); border-color: var(--action); }
 .btn-whatsapp {
-  background: #25D366; color: #fff;
+  background: #25D366; color: #0F1A15;
   padding: 14px 32px; font-size: 0.95rem;
 }
 .btn-whatsapp:hover { background: #1FB855; transform: translateY(-2px); box-shadow: 0 8px 22px rgba(37, 211, 102, 0.3); }
@@ -1239,7 +1258,7 @@ img { max-width: 100%; height: auto; display: block; }
 .float-wa {
   position: fixed; bottom: 24px; right: 24px; z-index: 900;
   width: 56px; height: 56px; border-radius: 50%;
-  background: #25D366; color: #fff;
+  background: #25D366; color: #0F1A15;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
   transition: transform 0.2s, box-shadow 0.2s;
@@ -2050,20 +2069,7 @@ body.srv-modal-open { overflow: hidden; }
     margin-inline: auto;
   }
   .mobile-bar .mb-secondary {
-    flex: 0 0 auto;
-    min-height: 44px;
-    padding: 0 16px;
-    border-radius: 100px;
-    background: var(--mint-whisper);
-    color: var(--forest);
-    border: 1px solid var(--mint-pale);
-    font-weight: 600;
-    font-size: 0.82rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-body);
+    display: none;
   }
   .mobile-bar .mb-primary {
     flex: 1;
@@ -2101,13 +2107,9 @@ body.srv-modal-open { overflow: hidden; }
     transform: translateY(0) scale(0.98);
     box-shadow: 0 1px 6px rgba(38, 118, 83, 0.22);
   }
-  /* WhatsApp flutuante sobe acima da barra, como ação secundária */
+  /* A barra mantém apenas o agendamento como ação fixa prioritária. */
   .float-wa {
-    display: flex;
-    bottom: calc(72px + env(safe-area-inset-bottom));
-    right: 16px;
-    width: 52px;
-    height: 52px;
+    display: none;
   }
   .float-wa svg { width: 26px; height: 26px; }
 
@@ -2602,6 +2604,36 @@ a.srv-square { text-decoration: none; }
   border-radius: 100px;
   padding: 3px 10px;
   text-shadow: none;
+}
+
+/* Ações claras do tema escuro usam texto escuro; fundos escurecidos mantêm branco. */
+[data-theme="dark"] .btn-nav,
+[data-theme="dark"] .btn-mint,
+[data-theme="dark"] .nav-menu a.btn-nav,
+[data-theme="dark"] .nav-menu a.btn-mint,
+[data-theme="dark"] .mobile-menu-cta .btn-mint,
+[data-theme="dark"] .mobile-bar .mb-primary,
+[data-theme="dark"] .srv-square-price,
+[data-theme="dark"] .teaser-badge,
+[data-theme="dark"] .about-badge,
+[data-theme="dark"] .founder-badge {
+  color: #0F1A15 !important;
+}
+
+[data-theme="dark"] .btn-nav:hover,
+[data-theme="dark"] .btn-nav:active,
+[data-theme="dark"] .btn-mint:hover,
+[data-theme="dark"] .btn-mint:active,
+[data-theme="dark"] .nav-menu a.btn-nav:hover,
+[data-theme="dark"] .nav-menu a.btn-nav:active,
+[data-theme="dark"] .nav-menu a.btn-mint:hover,
+[data-theme="dark"] .nav-menu a.btn-mint:active,
+[data-theme="dark"] .mobile-menu-cta .btn-mint:hover,
+[data-theme="dark"] .mobile-menu-cta .btn-mint:active,
+[data-theme="dark"] .mobile-bar .mb-primary:hover,
+[data-theme="dark"] .mobile-bar .mb-primary:focus-visible,
+[data-theme="dark"] .mobile-bar .mb-primary:active {
+  color: #fff !important;
 }
 
 /* Lista de valores no modal de serviço */

@@ -663,13 +663,9 @@ test('style.css: MOBILE COMPACTO inicia uma media query de até 900px', () => {
   mobileCompactMedia(read('style.css'));
 });
 
-test('style.css: MOBILE COMPACTO mantém .float-wa acima da barra', () => {
+test('style.css: MOBILE COMPACTO oculta .float-wa', () => {
   const declarations = declarationsFor(mobileCompactMedia(read('style.css')), '.float-wa');
-  assert.match(declarationValue(declarations, 'display') || '', /^flex$/i);
-  assert.match(
-    declarationValue(declarations, 'bottom') || '',
-    /^calc\(\s*72px\s*\+\s*env\(\s*safe-area-inset-bottom\s*\)\s*\)$/i,
-  );
+  assert.match(declarationValue(declarations, 'display') || '', /^none$/i);
 });
 
 test('style.css: MOBILE COMPACTO reduz o padding de .page-hero', () => {
@@ -693,11 +689,8 @@ test('style.css: MOBILE COMPACTO expande .mobile-bar .mb-primary', () => {
 test('style.css: ações da barra mobile mantêm contraste', () => {
   const media = mobileCompactMedia(read('style.css'));
   const primary = declarationsFor(media, '.mobile-bar .mb-primary');
-  const secondary = declarationsFor(media, '.mobile-bar .mb-secondary');
   assert.match(declarationValue(primary, 'background') || '', /^var\(--action\)$/i);
   assert.match(declarationValue(primary, 'color') || '', /^#fff\s*(?:!important)?$/i);
-  assert.match(declarationValue(secondary, 'background') || '', /^var\(--mint-whisper\)$/i);
-  assert.match(declarationValue(secondary, 'color') || '', /^var\(--forest\)$/i);
 });
 
 test('style.css: nav mobile respeita o safe area superior', () => {
