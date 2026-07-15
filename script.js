@@ -621,6 +621,8 @@ document.addEventListener('keydown', handleMobileMenuKeydown);
   const chipEl = document.getElementById('srvModalChip');
   const priceEl = document.getElementById('srvModalPrice');
   const summaryEl = document.getElementById('srvModalSummary');
+  const pricesBlockEl = document.getElementById('srvModalPricesBlock');
+  const pricesEl = document.getElementById('srvModalPrices');
   const factsEl = document.getElementById('srvModalFacts');
   const ctaEl = document.getElementById('srvModalCta');
   let lastFocus = null;
@@ -648,6 +650,35 @@ document.addEventListener('keydown', handleMobileMenuKeydown);
       priceEl.hidden = !price;
     }
     if (summaryEl) summaryEl.textContent = summary;
+    if (pricesBlockEl && pricesEl) {
+      let prices = [];
+      try { prices = JSON.parse(card.getAttribute('data-prices') || '[]'); } catch (e) { prices = []; }
+      pricesEl.innerHTML = '';
+      prices.forEach((row) => {
+        const li = document.createElement('li');
+        const label = row[0] || '';
+        const value = row[1] || '';
+        if (!value) {
+          // Linha sem valor = cabeçalho de grupo (ex.: Feminina / Masculina)
+          li.className = 'srv-prices-group';
+          li.textContent = label;
+        } else {
+          const name = document.createElement('span');
+          name.className = 'srv-prices-name';
+          name.textContent = label;
+          const dots = document.createElement('span');
+          dots.className = 'srv-prices-dots';
+          dots.setAttribute('aria-hidden', 'true');
+          const price = document.createElement('strong');
+          price.textContent = value;
+          li.appendChild(name);
+          li.appendChild(dots);
+          li.appendChild(price);
+        }
+        pricesEl.appendChild(li);
+      });
+      pricesBlockEl.hidden = !prices.length;
+    }
     if (factsEl) {
       factsEl.innerHTML = '';
       facts.forEach((row) => {

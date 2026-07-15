@@ -2603,3 +2603,44 @@ a.srv-square { text-decoration: none; }
   padding: 3px 10px;
   text-shadow: none;
 }
+
+/* Lista de valores no modal de serviço */
+.srv-prices-block { margin: 4px 0 18px; }
+.srv-prices-block h3 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 8px;
+}
+.srv-prices { list-style: none; margin: 0; padding: 0; }
+.srv-prices li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 0.88rem;
+  color: var(--text-mid);
+}
+.srv-prices-name { flex-shrink: 1; }
+.srv-prices-dots {
+  flex: 1;
+  min-width: 16px;
+  border-bottom: 1px dotted var(--mint-pale);
+  transform: translateY(-3px);
+}
+.srv-prices li strong {
+  color: var(--forest);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.srv-prices-group {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--action);
+  padding-top: 12px;
+}
+.srv-prices-group:first-child { padding-top: 0; }
