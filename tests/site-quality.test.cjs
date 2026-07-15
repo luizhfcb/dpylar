@@ -205,6 +205,10 @@ function openingTags(html, tagName) {
   return html.match(new RegExp(`<${escapedTagName}\\b[^>]*>`, 'gi')) || [];
 }
 
+function attributeTokens(tag, name) {
+  return (attribute(tag, name) || '').split(/\s+/).filter(Boolean);
+}
+
 function namedFunctionSource(source, functionName) {
   const match = new RegExp(`function\\s+${functionName}\\s*\\(`).exec(source);
   assert.ok(match, `script deve declarar function ${functionName}`);
@@ -264,6 +268,72 @@ for (const [page, canonicalUrl] of Object.entries(PAGES)) {
     assert.equal(elementsByClass(html, 'footer').length, 1);
   });
 }
+
+test('local.html e ambiente.html: logos da navegação declaram dimensões e texto alternativo', () => {
+  for (const page of ['local.html', 'ambiente.html']) {
+    const logo = openingTags(read(page), 'img')
+      .filter((tag) => hasClass(tag, 'brand-logo'));
+
+    assert.equal(logo.length, 2, `${page} deve conter os logos das duas navegações`);
+    for (const image of logo) {
+      assert.equal(attribute(image, 'width'), '44');
+      assert.equal(attribute(image, 'height'), '44');
+      assert.equal(attribute(image, 'alt'), "D'Pylar");
+    }
+  }
+});
+
+test('páginas: links que abrem nova aba protegem window.opener', () => {
+  const violations = [];
+  for (const page of Object.keys(PAGES)) {
+    const externalTabs = openingTags(read(page), 'a')
+      .filter((tag) => attribute(tag, 'target')?.toLowerCase() === '_blank');
+
+    for (const link of externalTabs) {
+      if (!attributeTokens(link, 'rel').some((token) => token.toLowerCase() === 'noopener')) {
+        violations.push(`${page}: ${attribute(link, 'href')}`);
+      }
+    }
+  }
+  assert.deepEqual(violations, [], `links sem noopener:\n${violations.join('\n')}`);
+});
+
+test('local.html: imagens dos cards de ambientes declaram suas dimensões reais', () => {
+  const cards = elementsByClass(read('local.html'), 'env-frame')
+    .flatMap((element) => openingTags(element.innerHtml, 'img'));
+  const dimensions = {
+    'assets/ambiente-recepcao.jpg': ['1280', '2276'],
+    'assets/ambiente-sala-cera.jpg': ['1280', '1382'],
+    'assets/ambiente-sala-multiuso.jpg': ['1280', '1560'],
+    'assets/ambiente-sobrancelha.jpg': ['1092', '1161'],
+    'assets/ambiente-cilios.jpg': ['581', '658'],
+    'assets/ambiente-copa.jpg': ['1280', '2276'],
+    'assets/ambiente-banheiro.jpg': ['1280', '2276'],
+  };
+
+  assert.equal(cards.length, 7, 'local.html deve conter sete imagens nos cards de ambientes');
+  for (const [src, [width, height]] of Object.entries(dimensions)) {
+    const matches = cards.filter((tag) => attribute(tag, 'src') === src);
+    assert.equal(matches.length, 1, `${src} deve aparecer em um único card`);
+    const [image] = matches;
+    assert.equal(attribute(image, 'width'), width, `${src} deve declarar width=${width}`);
+    assert.equal(attribute(image, 'height'), height, `${src} deve declarar height=${height}`);
+  }
+});
+
+test('index.html: avatares decorativos declaram dimensões reais', () => {
+  const avatars = openingTags(read('index.html'), 'img')
+    .filter((tag) => (
+      /(?:^|\/)team-[^/]*\.(?:avif|gif|jpe?g|png|webp)$/i.test(attribute(tag, 'src') || '')
+      && attribute(tag, 'alt') === ''
+    ));
+
+  assert.ok(avatars.length > 0, 'index.html deve conter avatares decorativos');
+  for (const avatar of avatars) {
+    assert.equal(attribute(avatar, 'width'), '640', `${attribute(avatar, 'src')} deve declarar width=640`);
+    assert.equal(attribute(avatar, 'height'), '800', `${attribute(avatar, 'src')} deve declarar height=800`);
+  }
+});
 
 test('ambiente.html: recepção é o conteúdo inicial', () => {
   const html = read('ambiente.html');
