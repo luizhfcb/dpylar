@@ -411,6 +411,51 @@ test('style.css: overrides dark usam texto escuro nas ações claras', () => {
   }
 });
 
+test('style.css: CTA da equipe vence a regra importante e preserva hover e active', () => {
+  const css = read('style.css');
+  const legacySelector = '.team-lightbox .lightbox-side .btn';
+  const darkSelector = '[data-theme="dark"] .team-lightbox .lightbox-side .btn';
+  const specificity = (selector) => [
+    (selector.match(/#[\w-]+/g) || []).length,
+    (selector.match(/\.[\w-]+|\[[^\]]+\]|:(?!:)[\w-]+/g) || []).length,
+    (selector.match(/(?:^|[\s>+~])(?:[a-z][\w-]*|\*)/gi) || [])
+      .filter((token) => !token.trim().startsWith('*')).length,
+  ];
+  const compareSpecificity = (left, right) => {
+    for (let index = 0; index < left.length; index += 1) {
+      if (left[index] !== right[index]) return left[index] - right[index];
+    }
+    return 0;
+  };
+
+  assertRuleDeclaration(css, legacySelector, 'color', /^#fff\s*!important$/i);
+  assertRuleDeclaration(css, darkSelector, 'color', /^#0F1A15\s*!important$/i);
+  assert.ok(
+    compareSpecificity(specificity(darkSelector), specificity(legacySelector)) > 0,
+    'override dark deve ser mais específico que a regra legada com !important',
+  );
+
+  for (const state of ['hover', 'active']) {
+    const stateSelector = `${darkSelector}:${state}`;
+    assertRuleDeclaration(css, stateSelector, 'color', /^#fff\s*!important$/i);
+    assert.ok(
+      compareSpecificity(specificity(stateSelector), specificity(darkSelector)) > 0,
+      `${state} deve vencer o estado normal no cascade`,
+    );
+  }
+});
+
+test('style.css: mapa e índice têm override dark global no desktop', () => {
+  const css = read('style.css');
+
+  for (const selector of [
+    '[data-theme="dark"] .map-overlay-btn',
+    '[data-theme="dark"] .env-index',
+  ]) {
+    assertRuleDeclaration(css, selector, 'color', /^#0F1A15$/i);
+  }
+});
+
 test('style.css: hover e active escuros mantêm texto branco', () => {
   const css = read('style.css');
   const compactCss = mobileCompactCss(css);
@@ -451,6 +496,47 @@ test('script.js: diálogos mantêm o foco do teclado dentro do modal', () => {
     read('servicos.html'),
     /<div class="srv-modal" id="srvModal" role="dialog" aria-modal="true" aria-labelledby="srvModalTitle" aria-describedby="srvModalSummary" aria-hidden="true" hidden>/,
   );
+});
+
+test('script.js: clique no marcador abre o mapa sem expor window.opener', () => {
+  const script = read('script.js');
+  const start = script.indexOf('// Lazy-load map when near viewport');
+  const end = script.indexOf("document.addEventListener('keydown', handleMobileMenuKeydown);", start);
+  assert.notEqual(start, -1, 'script deve manter o bloco de lazy-load do mapa');
+  assert.notEqual(end, -1, 'script deve encerrar o bloco do mapa antes do menu mobile');
+
+  let markerClick;
+  const openCalls = [];
+  const mapInstance = {
+    setView() { return this; },
+    on() {},
+    invalidateSize() {},
+    scrollWheelZoom: { enable() {}, disable() {} },
+  };
+  const mapElement = { dataset: {} };
+  const context = vm.createContext({
+    document: { getElementById: (id) => (id === 'dpylar-map' ? mapElement : null) },
+    window: { open: (...args) => openCalls.push(args) },
+    L: {
+      map: () => mapInstance,
+      tileLayer: () => ({ addTo() {} }),
+      icon: () => ({}),
+      marker: () => ({
+        addTo() { return this; },
+        on(type, listener) { if (type === 'click') markerClick = listener; },
+      }),
+    },
+    setTimeout: (callback) => callback(),
+    encodeURIComponent,
+  });
+
+  vm.runInContext(script.slice(start, end), context);
+  assert.equal(typeof markerClick, 'function');
+  markerClick();
+
+  assert.equal(openCalls.length, 1);
+  assert.match(openCalls[0][0], /^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=/);
+  assert.deepEqual(Array.from(openCalls[0].slice(1)), ['_blank', 'noopener']);
 });
 
 test('script.js: helper de foco exclui controles desabilitados ou não renderizados', () => {
@@ -573,7 +659,7 @@ test('local.html: lightbox executa abertura, Escape, backdrop e restauração de
     src: `ambiente-${index % 7}.jpg`,
     alt: `Ambiente ${index % 7}`,
   }));
-  const slides = images.map((image) => node({ querySelector: () => image }));
+  const slides = images.map((image) => node({ disabled: true, querySelector: () => image }));
   const section = node();
   const track = node({ querySelectorAll: () => images });
   const lightboxImg = node({ src: '', alt: '' });
@@ -610,6 +696,8 @@ test('local.html: lightbox executa abertura, Escape, backdrop e restauração de
     setTimeout: (callback) => callback(),
   });
   vm.runInContext(`${helpersSource}\n${inlineScript}`, context);
+
+  assert.equal(slides.every((slide) => slide.disabled === false), true);
 
   slides[0].listeners.click();
   assert.equal(lightbox.hidden, false);
@@ -772,9 +860,12 @@ test('style.css: carrossel Local pausa com foco ou lightbox aberto', () => {
 
 test('local.html: carrossel e lightbox são operáveis por teclado', () => {
   const html = read('local.html');
+  const slides = openingTags(html, 'button').filter((tag) => hasClass(tag, 'local-slide'));
 
   assert.match(html, /<div class="lightbox" id="lightbox" role="dialog" aria-modal="true"[^>]*aria-hidden="true" hidden>/);
   assert.equal((html.match(/<button type="button" class="local-slide"/g) || []).length, 14);
+  assert.equal(slides.length, 14);
+  assert.equal(slides.every((slide) => /\sdisabled(?:\s|>)/i.test(slide)), true);
   assert.match(html, /lastLightboxFocus/);
   assert.match(html, /trapDialogFocus\(e,\s*lightbox\)/);
 });

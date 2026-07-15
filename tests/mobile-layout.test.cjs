@@ -217,7 +217,7 @@ function declarationsFor(cssBlock, selector) {
     splitCssTopLevel(block.header, ',')
       .some((candidate) => normalizeSelector(candidate) === expectedSelector)
   ));
-  assert.ok(rule, `@media mobile deve conter a regra ${selector}`);
+  assert.ok(rule, `CSS consultado deve conter a regra ${selector}`);
   return rule.body;
 }
 
@@ -760,13 +760,13 @@ test('style.css: forced colors mobile mantém foco visível', () => {
   assert.ok(outline && !/^none(?:\s|$)/i.test(outline), ':focus-visible deve ter outline não-none');
 });
 
-test('style.css: contraste de mapa e índice fica escopado ao dark mobile', () => {
-  const media = mobileCompactMedia(read('style.css'));
+test('style.css: contraste de mapa e índice vale no dark em qualquer viewport', () => {
+  const css = stripCssComments(read('style.css'));
   for (const selector of [
     '[data-theme="dark"] .map-overlay-btn',
     '[data-theme="dark"] .env-index',
   ]) {
-    const declarations = declarationsFor(media, selector);
+    const declarations = declarationsFor(css, selector);
     assert.match(declarationValue(declarations, 'color') || '', /^#0F1A15$/i);
   }
 });

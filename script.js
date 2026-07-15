@@ -617,7 +617,7 @@ if (featured) {
     const marker = L.marker([lat, lng], { icon: icon }).addTo(mapInstance);
     marker.on('click', function () {
       const endereco = "D'Pylar, Av. Plínio Lemos, 195 - Malvinas, Campina Grande - PB";
-      window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(endereco), '_blank');
+      window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(endereco), '_blank', 'noopener');
     });
     mapInstance.on('focus', function () { mapInstance.scrollWheelZoom.enable(); });
     mapInstance.on('blur', function () { mapInstance.scrollWheelZoom.disable(); });

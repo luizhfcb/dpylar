@@ -2427,8 +2427,6 @@ body.lightbox-open .local-carousel-section .local-carousel-track {
     justify-content: center;
   }
 
-  [data-theme="dark"] .map-overlay-btn,
-  [data-theme="dark"] .env-index { color: #0F1A15; }
   [data-theme="dark"] .teaser-badge,
   [data-theme="dark"] .about-badge,
   [data-theme="dark"] .founder-badge { color: #0F1A15; }
@@ -2614,6 +2612,11 @@ a.srv-square { text-decoration: none; }
 }
 
 /* Ações claras do tema escuro usam texto escuro; fundos escurecidos mantêm branco. */
+[data-theme="dark"] .map-overlay-btn,
+[data-theme="dark"] .env-index {
+  color: #0F1A15;
+}
+
 [data-theme="dark"] .btn-nav,
 [data-theme="dark"] .btn-mint,
 [data-theme="dark"] .nav-menu a.btn-nav,
@@ -2625,6 +2628,15 @@ a.srv-square { text-decoration: none; }
 [data-theme="dark"] .about-badge,
 [data-theme="dark"] .founder-badge {
   color: #0F1A15 !important;
+}
+
+[data-theme="dark"] .team-lightbox .lightbox-side .btn {
+  color: #0F1A15 !important;
+}
+
+[data-theme="dark"] .team-lightbox .lightbox-side .btn:hover,
+[data-theme="dark"] .team-lightbox .lightbox-side .btn:active {
+  color: #fff !important;
 }
 
 [data-theme="dark"] .btn-nav:hover,
